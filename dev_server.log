@@ -5,14 +5,20 @@
 ▲ Next.js 16.2.12 (Turbopack)
 - Local:         http://localhost:3000
 - Network:       http://192.168.0.2:3000
-✓ Ready in 561ms
+✓ Ready in 554ms
 
 ○ Compiling /login ...
- GET /login 200 in 5.6s (next.js: 5.0s, application-code: 537ms)
-[browser] Could not copy to clipboard NotAllowedError: Failed to execute 'writeText' on 'Clipboard': Write permission denied.
-NotAllowedError: Failed to execute 'writeText' on 'Clipboard': Write permission denied. (app/(auth)
- GET /dashboard 200 in 725ms (next.js: 676ms, application-code: 49ms)
- GET /login 200 in 92ms (next.js: 9ms, application-code: 83ms)
-[browser] Could not copy to clipboard NotAllowedError: Failed to execute 'writeText' on 'Clipboard': Write permission denied.
-NotAllowedError: Failed to execute 'writeText' on 'Clipboard': Write permission denied. (app/(auth)
- GET /dashboard 200 in 50ms (next.js: 5ms, application-code: 44ms)
+ GET /login 200 in 5.2s (next.js: 4.8s, application-code: 423ms)
+ GET /dashboard 200 in 631ms (next.js: 591ms, application-code: 41ms)
+✓ Compiled in 76ms
+ GET /login 200 in 352ms (next.js: 163ms, application-code: 190ms)
+ GET /login 200 in 73ms (next.js: 5ms, application-code: 68ms)
+ GET /dashboard 200 in 55ms (next.js: 17ms, application-code: 39ms)
+ GET /login 200 in 178ms (next.js: 66ms, application-code: 112ms)
+ GET /dashboard 200 in 90ms (next.js: 20ms, application-code: 71ms)
+ GET /login 200 in 78ms (next.js: 5ms, application-code: 73ms)
+ GET /dashboard 200 in 46ms (next.js: 6ms, application-code: 40ms)
+ GET /login 200 in 70ms (next.js: 4ms, application-code: 66ms)
+ GET /dashboard 200 in 34ms (next.js: 6ms, application-code: 28ms)
+ GET /login 200 in 66ms (next.js: 3ms, application-code: 63ms)
+ GET /dashboard 200 in 48ms (next.js: 4ms, application-code: 44ms)
