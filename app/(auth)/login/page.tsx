@@ -1,15 +1,13 @@
 "use client";
 
 import React, { useState } from "react";
-import { ArrowRight, Check, Eye, EyeOff, Lock, Mail, Sparkles } from "lucide-react";
+import { ArrowRight, Check, Eye, EyeOff, Lock, Mail } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 
 const demoProfiles = {
-  admin: { label: "Admin", email: "admin@corpcrm.dev", pass: "Admin123!", meta: "Command center" },
-  employee: { label: "Employee", email: "alice.freeman@corpcrm.dev", pass: "Employee123!", meta: "Personal queue" },
+  admin: { label: "Admin Account", email: "admin@corpcrm.dev", pass: "Admin123!", meta: "Command center" },
+  employee: { label: "Employee Account", email: "alice.freeman@corpcrm.dev", pass: "Employee123!", meta: "Personal queue" },
 };
-
-const proofPoints = ["12 active squads", "98% task clarity", "04 overdue risks"];
 
 export default function LoginPage() {
   const { login } = useAuth();
@@ -64,105 +62,158 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-white text-zinc-950">
-      <div className="absolute inset-0 grid-bg opacity-70" />
-      <div className="absolute -left-24 top-16 h-72 w-72 rounded-full border border-black/10" />
-      <div className="absolute bottom-0 right-0 h-[34rem] w-[34rem] translate-x-1/3 translate-y-1/3 rounded-full border-[5rem] border-black/5" />
+    <main className="relative flex min-h-screen items-center justify-center bg-black px-4 py-12 text-zinc-200">
+      {/* Vercel Grid & Ambient Background */}
+      <div className="absolute inset-0 grid-bg opacity-40" />
+      <div className="absolute top-1/4 left-1/2 h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 glowing-beam pointer-events-none" />
 
-      <div className="relative mx-auto grid min-h-screen w-full max-w-7xl grid-cols-1 p-4 lg:grid-cols-[1fr_500px] lg:p-6">
-        <section className="relative flex min-h-[52rem] flex-col justify-between overflow-hidden rounded-[2.25rem] bg-zinc-950 p-6 text-white sm:p-10 lg:min-h-0">
-          <div className="absolute inset-px rounded-[2.2rem] mono-noise opacity-35" />
-          <div className="absolute right-8 top-8 h-40 w-40 rounded-full border border-white/20" />
-          <div className="absolute -bottom-20 left-12 h-64 w-64 rounded-full border-[3rem] border-white/10" />
+      <div className="relative z-10 w-full max-w-[420px]">
+        {/* Vercel minimalist logo: solid triangle */}
+        <div className="mb-8 flex flex-col items-center">
+          <svg
+            className="h-8 w-8 text-white transition-transform hover:scale-105"
+            viewBox="0 0 75 65"
+            fill="currentColor"
+          >
+            <polygon points="37.5,0 75,65 0,65" />
+          </svg>
+          <h1 className="mt-4 text-xl font-medium tracking-tight text-white">
+            Sign in to CorpCRM
+          </h1>
+          <p className="mt-1 text-xs text-zinc-500">
+            Enter your credentials or choose a quick demo account
+          </p>
+        </div>
 
-          <div className="relative z-10 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="grid h-10 w-10 place-items-center rounded-2xl bg-white text-zinc-950 shadow-[8px_8px_0_rgba(255,255,255,0.18)]">
-                <Sparkles className="h-5 w-5" />
-              </div>
-              <div>
-                <span className="block text-sm font-semibold tracking-tight">CorpCRM</span>
-                <span className="text-xs text-white/55">Monochrome operating system</span>
-              </div>
+        {/* Demo profiles selector tab bar */}
+        <div className="mb-6 grid grid-cols-2 gap-2 p-1 rounded-md border border-zinc-800 bg-zinc-950/60 backdrop-blur-md">
+          {(Object.keys(demoProfiles) as Array<keyof typeof demoProfiles>).map((key) => {
+            const active = selectedProfile === key;
+            return (
+              <button
+                key={key}
+                type="button"
+                onClick={() => chooseProfile(key)}
+                className={`relative flex flex-col items-start px-3 py-2.5 rounded-sm transition-all duration-150 ${
+                  active
+                    ? "bg-zinc-900 text-white"
+                    : "text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900/40"
+                }`}
+              >
+                <div className="flex w-full items-center justify-between text-xs font-semibold tracking-tight">
+                  <span>{demoProfiles[key].label}</span>
+                  {active ? (
+                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)]" />
+                  ) : (
+                    <span className="h-1.5 w-1.5 rounded-full bg-transparent" />
+                  )}
+                </div>
+                <span className="mt-0.5 text-[10px] text-zinc-500 font-normal">
+                  {demoProfiles[key].meta}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Login form container */}
+        <div className="rounded-lg border border-zinc-800 bg-zinc-950/80 p-6 shadow-2xl backdrop-blur-xl">
+          {generalError && (
+            <div className="mb-4 rounded-md border border-red-900/50 bg-red-950/30 px-3.5 py-2.5 text-xs text-red-400">
+              {generalError}
             </div>
-            <span className="rounded-full border border-white/20 px-3 py-1 text-xs text-white/70">Private beta</span>
-          </div>
+          )}
 
-          <div className="relative z-10 my-16 max-w-3xl lg:my-0">
-            <p className="mb-6 w-fit rounded-full border border-white/20 px-4 py-2 text-xs font-medium uppercase tracking-[0.3em] text-white/70">
-              Tasks · People · Focus
-            </p>
-            <h1 className="text-6xl font-black leading-[0.86] tracking-[-0.08em] sm:text-8xl lg:text-9xl">
-              Work, cut into signal.
-            </h1>
-            <p className="mt-8 max-w-xl text-lg leading-8 text-white/68">
-              A high-contrast CRM with editorial rhythm, decisive cards, and role-aware views that keep teams moving without decoration overload.
-            </p>
-          </div>
-
-          <div className="relative z-10 grid gap-3 sm:grid-cols-3">
-            {proofPoints.map((item) => (
-              <div key={item} className="rounded-3xl border border-white/15 bg-white/8 p-4 backdrop-blur">
-                <div className="text-2xl font-semibold tracking-[-0.05em]">{item.slice(0, 2)}</div>
-                <div className="mt-2 text-xs uppercase tracking-[0.18em] text-white/55">{item.slice(3)}</div>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label
+                htmlFor="email"
+                className="mb-1.5 block text-xs font-medium text-zinc-400"
+              >
+                Email Address
+              </label>
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-zinc-500" />
+                <input
+                  id="email"
+                  type="email"
+                  required
+                  placeholder="name@corpcrm.dev"
+                  value={email}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    setSelectedProfile(null);
+                  }}
+                  className={`w-full rounded-md border bg-zinc-950 py-2 pl-9 pr-3 text-sm text-white placeholder-zinc-600 outline-none transition duration-150 focus:border-zinc-200 focus:ring-1 focus:ring-zinc-200 ${
+                    fieldErrors.email?.length ? "border-red-500" : "border-zinc-800"
+                  }`}
+                />
               </div>
-            ))}
-          </div>
-        </section>
-
-        <section className="flex items-center px-2 py-8 lg:px-8">
-          <div className="w-full rounded-[2rem] border border-zinc-200 bg-white/90 p-5 shadow-[0_24px_80px_rgba(0,0,0,0.10)] backdrop-blur sm:p-8">
-            <div className="mb-8 flex items-end justify-between gap-4">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-zinc-500">Secure entry</p>
-                <h2 className="mt-3 text-4xl font-black tracking-[-0.06em]">Sign in</h2>
-              </div>
-              <div className="hidden h-16 w-16 rounded-full border border-zinc-950 sm:block" />
-            </div>
-
-            <div className="mb-6 grid grid-cols-2 gap-3">
-              {(Object.keys(demoProfiles) as Array<keyof typeof demoProfiles>).map((key) => (
-                <button key={key} type="button" onClick={() => chooseProfile(key)} className={`group rounded-3xl border p-4 text-left transition ${selectedProfile === key ? "border-zinc-950 bg-zinc-950 text-white" : "border-zinc-200 bg-white text-zinc-950 hover:-translate-y-0.5 hover:border-zinc-950"}`}>
-                  <div className="flex items-center justify-between text-sm font-semibold">
-                    {demoProfiles[key].label}
-                    {selectedProfile === key && <Check className="h-4 w-4" />}
-                  </div>
-                  <div className={`mt-3 text-xs ${selectedProfile === key ? "text-zinc-300" : "text-zinc-500"}`}>{demoProfiles[key].meta}</div>
-                </button>
+              {fieldErrors.email?.map((err) => (
+                <span key={err} className="mt-1 block text-[11px] text-red-400">
+                  {err}
+                </span>
               ))}
             </div>
 
-            {generalError && <div className="mb-4 rounded-2xl border border-zinc-950 bg-white px-4 py-3 text-sm font-medium text-zinc-950 shadow-[5px_5px_0_#09090b]">{generalError}</div>}
-
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <label className="block">
-                <span className="mb-2 block text-xs font-bold uppercase tracking-[0.18em] text-zinc-500">Email</span>
-                <div className="relative">
-                  <Mail className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-500" />
-                  <input id="email" type="email" required placeholder="name@corpcrm.dev" value={email} onChange={(e) => setEmail(e.target.value)} className={`w-full rounded-2xl border bg-white py-4 pl-11 pr-4 text-sm outline-none transition focus:border-zinc-950 focus:shadow-[5px_5px_0_#09090b] ${fieldErrors.email?.length ? "border-zinc-950" : "border-zinc-200"}`} />
-                </div>
-                {fieldErrors.email?.map((err) => <span key={err} className="mt-1 block text-xs text-zinc-700">{err}</span>)}
+            <div>
+              <label
+                htmlFor="password"
+                className="mb-1.5 block text-xs font-medium text-zinc-400"
+              >
+                Password
               </label>
+              <div className="relative">
+                <Lock className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-zinc-500" />
+                <input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  required
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    setSelectedProfile(null);
+                  }}
+                  className={`w-full rounded-md border bg-zinc-950 py-2 pl-9 pr-10 text-sm text-white placeholder-zinc-600 outline-none transition duration-150 focus:border-zinc-200 focus:ring-1 focus:ring-zinc-200 ${
+                    fieldErrors.password?.length ? "border-red-500" : "border-zinc-800"
+                  }`}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? (
+                    <EyeOff className="h-3.5 w-3.5" />
+                  ) : (
+                    <Eye className="h-3.5 w-3.5" />
+                  )}
+                </button>
+              </div>
+              {fieldErrors.password?.map((err) => (
+                <span key={err} className="mt-1 block text-[11px] text-red-400">
+                  {err}
+                </span>
+              ))}
+            </div>
 
-              <label className="block">
-                <span className="mb-2 block text-xs font-bold uppercase tracking-[0.18em] text-zinc-500">Password</span>
-                <div className="relative">
-                  <Lock className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-500" />
-                  <input id="password" type={showPassword ? "text" : "password"} required placeholder="••••••••" value={password} onChange={(e) => setPassword(e.target.value)} className={`w-full rounded-2xl border bg-white py-4 pl-11 pr-12 text-sm outline-none transition focus:border-zinc-950 focus:shadow-[5px_5px_0_#09090b] ${fieldErrors.password?.length ? "border-zinc-950" : "border-zinc-200"}`} />
-                  <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-950" aria-label={showPassword ? "Hide password" : "Show password"}>
-                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                  </button>
-                </div>
-                {fieldErrors.password?.map((err) => <span key={err} className="mt-1 block text-xs text-zinc-700">{err}</span>)}
-              </label>
+            <button
+              type="submit"
+              disabled={loading}
+              className="relative flex w-full items-center justify-center gap-1.5 rounded-md bg-white py-2 px-4 text-xs font-semibold text-black transition duration-150 hover:bg-zinc-200 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {loading ? "Signing in..." : "Continue"}
+              {!loading && <ArrowRight className="h-3.5 w-3.5" />}
+            </button>
+          </form>
+        </div>
 
-              <button type="submit" disabled={loading} className="group flex w-full items-center justify-center gap-2 rounded-2xl bg-zinc-950 px-4 py-4 text-sm font-bold text-white transition hover:-translate-y-0.5 hover:shadow-[7px_7px_0_rgba(0,0,0,0.18)] disabled:cursor-not-allowed disabled:opacity-60">
-                {loading ? "Signing in..." : "Enter workspace"}
-                {!loading && <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />}
-              </button>
-            </form>
-          </div>
-        </section>
+        {/* Minimalist footer info */}
+        <p className="mt-8 text-center text-[10px] text-zinc-600">
+          Secure, HTTPOnly encrypted session authorization · CorpCRM 2026
+        </p>
       </div>
     </main>
   );

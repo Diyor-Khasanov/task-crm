@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #09090b;
+  --background: #000000;
+  --foreground: #fafafa;
 }
 
 * {
@@ -11,11 +11,12 @@
 
 html {
   background: var(--background);
+  color-scheme: dark;
 }
 
 body {
   margin: 0;
-  background: #ffffff;
+  background: #000000;
   color: var(--foreground);
 }
 
@@ -32,18 +33,29 @@ button:disabled {
   cursor: not-allowed;
 }
 
+/* Elegant Vercel-style dot grid background */
 .grid-bg {
-  background-image:
-    linear-gradient(rgba(9, 9, 11, 0.055) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(9, 9, 11, 0.055) 1px, transparent 1px);
-  background-size: 28px 28px;
-  mask-image: radial-gradient(circle at 50% 25%, black, transparent 72%);
+  background-image: radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 24px 24px;
 }
 
-.mono-noise {
-  background-image:
-    radial-gradient(circle at 15% 20%, rgba(255,255,255,0.22) 0 1px, transparent 1px),
-    radial-gradient(circle at 80% 10%, rgba(255,255,255,0.16) 0 1px, transparent 1px),
-    linear-gradient(135deg, rgba(255,255,255,0.08) 25%, transparent 25%, transparent 50%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.08) 75%, transparent 75%);
-  background-size: 34px 34px, 48px 48px, 18px 18px;
+/* Subtle glow / beam elements */
+.glowing-beam {
+  background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.03), transparent 70%);
+}
+
+/* Perfect scrollbar for dark mode */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #000000;
+}
+::-webkit-scrollbar-thumb {
+  background: #27272a;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3f3f46;
 }
