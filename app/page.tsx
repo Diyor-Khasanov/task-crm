@@ -1,9 +1,8 @@
 "use client";
 
 import { useEffect } from "react";
-import { useAuth } from "./context/AuthContext";
 import { useRouter } from "next/navigation";
-import { Activity } from "lucide-react";
+import { useAuth } from "./context/AuthContext";
 
 export default function HomePage() {
   const { user, loading } = useAuth();
@@ -11,28 +10,20 @@ export default function HomePage() {
 
   useEffect(() => {
     if (!loading) {
-      if (user) {
-        router.replace("/dashboard");
-      } else {
-        router.replace("/login");
-      }
+      router.replace(user ? "/dashboard" : "/login");
     }
   }, [user, loading, router]);
 
-  // Splash Screen/Loading indicator while evaluating session
   return (
-    <div className="min-h-screen w-full flex flex-col justify-center items-center bg-slate-950 text-slate-100">
-      <div className="relative flex flex-col items-center gap-4">
-        <div className="h-16 w-16 rounded-2xl bg-gradient-to-tr from-indigo-500 to-emerald-400 p-4 shadow-2xl shadow-indigo-500/20 animate-bounce flex items-center justify-center">
-          <Activity className="h-full w-full text-slate-950 font-black" />
+    <main className="flex min-h-screen items-center justify-center bg-white text-zinc-950">
+      <div className="flex flex-col items-center gap-5">
+        <div className="grid h-10 w-10 place-items-center rounded-full border border-zinc-200 bg-white shadow-sm">
+          <div className="h-2 w-2 animate-pulse rounded-full bg-zinc-950" />
         </div>
-        <div className="h-2 w-24 bg-slate-800 rounded-full overflow-hidden">
-          <div className="h-full w-1/2 bg-gradient-to-r from-indigo-500 to-emerald-400 rounded-full animate-infinite-scroll animate-pulse" />
-        </div>
-        <p className="text-xs font-bold tracking-widest text-slate-400 uppercase animate-pulse">
-          Initializing CorpCRM Router...
+        <p className="text-[11px] font-medium uppercase tracking-[0.28em] text-zinc-500">
+          Opening workspace
         </p>
       </div>
-    </div>
+    </main>
   );
 }

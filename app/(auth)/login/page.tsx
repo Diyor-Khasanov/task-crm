@@ -1,21 +1,13 @@
 "use client";
 
 import React, { useState } from "react";
+import { ArrowRight, Check, Eye, EyeOff, Lock, Mail } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
-import {
-  Lock,
-  Mail,
-  ArrowRight,
-  Copy,
-  Check,
-  AlertCircle,
-  Shield,
-  User,
-  Sparkles,
-  Activity,
-  Eye,
-  EyeOff
-} from "lucide-react";
+
+const demoProfiles = {
+  admin: { label: "Admin", email: "admin@corpcrm.dev", pass: "Admin123!" },
+  employee: { label: "Employee", email: "alice.freeman@corpcrm.dev", pass: "Employee123!" },
+};
 
 export default function LoginPage() {
   const { login } = useAuth();
@@ -23,38 +15,17 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-
-  // Error handling states
   const [generalError, setGeneralError] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({});
+  const [selectedProfile, setSelectedProfile] = useState<"admin" | "employee" | null>(null);
 
-  // Feedback states for copy buttons
-  const [copiedType, setCopiedType] = useState<"admin" | "employee" | null>(null);
-
-  const handleCopyCredentials = async (type: "admin" | "employee") => {
-    const creds = {
-      admin: { email: "admin@corpcrm.dev", pass: "Admin123!" },
-      employee: { email: "alice.freeman@corpcrm.dev", pass: "Employee123!" },
-    };
-
-    const chosen = creds[type];
-
-    // Auto-fill form fields
-    setEmail(chosen.email);
-    setPassword(chosen.pass);
-
-    // Clear previous errors
+  const chooseProfile = (type: "admin" | "employee") => {
+    const profile = demoProfiles[type];
+    setEmail(profile.email);
+    setPassword(profile.pass);
+    setSelectedProfile(type);
     setGeneralError(null);
     setFieldErrors({});
-
-    // Write to clipboard
-    try {
-      await navigator.clipboard.writeText(chosen.email); // standard requires clipboard action
-      setCopiedType(type);
-      setTimeout(() => setCopiedType(null), 2000);
-    } catch (err) {
-      console.error("Could not copy to clipboard", err);
-    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -66,294 +37,149 @@ export default function LoginPage() {
     try {
       const response = await fetch("/api/auth/login", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
 
       const result = await response.json();
 
       if (response.ok && result.success) {
-        // Log in user via context
         login(result.data);
+      } else if (response.status === 422 && result.error?.fieldErrors) {
+        setFieldErrors(result.error.fieldErrors);
+        setGeneralError(result.error.message || "Please correct the highlighted fields.");
+      } else if (response.status === 401) {
+        setGeneralError("Invalid email or password.");
       } else {
-        // Handle errors
-        if (response.status === 422 && result.error?.fieldErrors) {
-          setFieldErrors(result.error.fieldErrors);
-          setGeneralError(result.error.message || "Please correct the errors in the form.");
-        } else if (response.status === 401) {
-          setGeneralError("Invalid email or password. Please verify your credentials.");
-        } else {
-          setGeneralError(result.error?.message || "An unexpected error occurred. Please try again.");
-        }
+        setGeneralError(result.error?.message || "Unable to sign in. Please try again.");
       }
     } catch (err) {
       console.error("Login request failed:", err);
-      setGeneralError("Network error: Could not reach the server. Please check your connection.");
+      setGeneralError("Network error: could not reach the server.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen w-full flex flex-col md:flex-row bg-slate-950 text-slate-100 overflow-hidden relative selection:bg-indigo-500 selection:text-white">
-      {/* Decorative Background Elements */}
-      <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] rounded-full bg-indigo-500/10 blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] rounded-full bg-emerald-500/10 blur-[120px] pointer-events-none" />
-
-      {/* Left Column: Brand Hero & Presentation */}
-      <div className="hidden md:flex md:w-1/2 p-12 lg:p-20 flex-col justify-between relative border-r border-slate-800/40 bg-slate-900/40 backdrop-blur-xl">
-        {/* Brand logo header */}
-        <div className="flex items-center gap-3">
-          <div className="h-10 w-10 rounded-xl bg-gradient-to-tr from-indigo-500 to-emerald-400 p-2.5 shadow-lg shadow-indigo-500/20 flex items-center justify-center">
-            <Activity className="h-full w-full text-slate-950 font-bold" />
-          </div>
-          <span className="text-xl font-bold bg-gradient-to-r from-indigo-400 to-emerald-300 bg-clip-text text-transparent tracking-wide">
-            CorpCRM
-          </span>
-        </div>
-
-        {/* Hero Middle Content */}
-        <div className="my-auto space-y-8 max-w-lg">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-xs font-semibold text-indigo-300">
-            <Sparkles className="h-3.5 w-3.5" /> Next-Gen Enterprise Portal
-          </div>
-          <h1 className="text-4xl lg:text-5xl font-black tracking-tight leading-[1.1] text-white">
-            Supercharge your workflow with <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-emerald-400 bg-clip-text text-transparent">Role-Based Access</span>
-          </h1>
-          <p className="text-slate-400 text-base leading-relaxed">
-            Welcome to CorpCRM. A highly secure, fluid dashboard designed specifically to coordinate roles, optimize employee performance, and track enterprise deliverables.
-          </p>
-
-          {/* Quick info boxes */}
-          <div className="grid grid-cols-2 gap-4 pt-4">
-            <div className="p-4 rounded-xl bg-slate-800/30 border border-slate-800/50 backdrop-blur-sm">
-              <div className="flex items-center gap-2 text-indigo-400 font-semibold text-sm mb-1.5">
-                <Shield className="h-4 w-4" /> Administrator
-              </div>
-              <p className="text-xs text-slate-400">Full management of tasks, employees, and operations.</p>
+    <main className="min-h-screen bg-white text-zinc-950">
+      <div className="mx-auto grid min-h-screen w-full max-w-6xl grid-cols-1 lg:grid-cols-[1fr_440px]">
+        <section className="flex flex-col justify-between border-zinc-200 px-6 py-8 lg:border-r lg:px-12">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <div className="h-6 w-6 rounded-full bg-zinc-950" />
+              <span className="text-sm font-semibold tracking-tight">CorpCRM</span>
             </div>
-            <div className="p-4 rounded-xl bg-slate-800/30 border border-slate-800/50 backdrop-blur-sm">
-              <div className="flex items-center gap-2 text-emerald-400 font-semibold text-sm mb-1.5">
-                <User className="h-4 w-4" /> Employee
-              </div>
-              <p className="text-xs text-slate-400">Streamlined inbox view to track and update assigned workloads.</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Footer */}
-        <div className="text-xs text-slate-500">
-          © {new Date().getFullYear()} CorpCRM Inc. All rights reserved. Built with passion and Next.js.
-        </div>
-      </div>
-
-      {/* Right Column: Secure Login Form */}
-      <div className="flex-1 p-6 sm:p-12 md:p-16 lg:p-24 flex flex-col justify-center items-center z-10">
-        <div className="w-full max-w-md space-y-8">
-
-          {/* Mobile logo header */}
-          <div className="flex md:hidden items-center gap-3 justify-center mb-6">
-            <div className="h-10 w-10 rounded-xl bg-gradient-to-tr from-indigo-500 to-emerald-400 p-2.5 shadow-lg shadow-indigo-500/20 flex items-center justify-center">
-              <Activity className="h-full w-full text-slate-950 font-bold" />
-            </div>
-            <span className="text-xl font-bold bg-gradient-to-r from-indigo-400 to-emerald-300 bg-clip-text text-transparent tracking-wide">
-              CorpCRM
+            <span className="rounded-full border border-zinc-200 px-3 py-1 text-xs text-zinc-500">
+              Private beta
             </span>
           </div>
 
-          <div className="text-center md:text-left space-y-2">
-            <h2 className="text-3xl font-extrabold tracking-tight text-white">
-              Secure Sign-in
-            </h2>
-            <p className="text-slate-400 text-sm">
-              Enter your credentials or click a demo profile below to inspect different role views.
+          <div className="my-20 max-w-2xl lg:my-0">
+            <p className="mb-5 text-xs font-medium uppercase tracking-[0.26em] text-zinc-500">
+              Tasks · People · Focus
+            </p>
+            <h1 className="text-5xl font-semibold tracking-[-0.06em] text-zinc-950 sm:text-7xl">
+              A quieter CRM for precise teams.
+            </h1>
+            <p className="mt-6 max-w-xl text-lg leading-8 text-zinc-600">
+              Minimal surfaces, clear hierarchy, and fast role-based access keep the work visible without visual noise.
             </p>
           </div>
 
-          {/* Quick Demo Credentials Panel */}
-          <div className="p-5 rounded-2xl bg-gradient-to-b from-slate-900 to-slate-950 border border-slate-800/80 shadow-2xl space-y-4">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-slate-400 tracking-wider uppercase">Demo Profiles</span>
-              <span className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {/* Admin Copy Button */}
-              <button
-                type="button"
-                onClick={() => handleCopyCredentials("admin")}
-                className={`group relative flex flex-col items-start p-3 rounded-xl border text-left transition-all duration-300 cursor-pointer ${
-                  copiedType === "admin"
-                    ? "bg-indigo-500/10 border-indigo-500/50 ring-1 ring-indigo-500/30"
-                    : "bg-slate-900/60 hover:bg-slate-800/40 border-slate-800 hover:border-indigo-500/30"
-                }`}
-              >
-                <div className="w-full flex items-center justify-between mb-1.5">
-                  <span className="text-xs font-bold px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300">
-                    Admin Account
-                  </span>
-                  {copiedType === "admin" ? (
-                    <Check className="h-3.5 w-3.5 text-indigo-400" />
-                  ) : (
-                    <Copy className="h-3.5 w-3.5 text-slate-500 group-hover:text-slate-300 transition-colors" />
-                  )}
-                </div>
-                <div className="text-xs font-medium text-slate-300 truncate w-full">admin@corpcrm.dev</div>
-                <div className="text-[10px] text-slate-500 mt-0.5">Password: Admin123!</div>
-              </button>
-
-              {/* Employee Copy Button */}
-              <button
-                type="button"
-                onClick={() => handleCopyCredentials("employee")}
-                className={`group relative flex flex-col items-start p-3 rounded-xl border text-left transition-all duration-300 cursor-pointer ${
-                  copiedType === "employee"
-                    ? "bg-emerald-500/10 border-emerald-500/50 ring-1 ring-emerald-500/30"
-                    : "bg-slate-900/60 hover:bg-slate-800/40 border-slate-800 hover:border-emerald-500/30"
-                }`}
-              >
-                <div className="w-full flex items-center justify-between mb-1.5">
-                  <span className="text-xs font-bold px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300">
-                    Employee Account
-                  </span>
-                  {copiedType === "employee" ? (
-                    <Check className="h-3.5 w-3.5 text-emerald-400" />
-                  ) : (
-                    <Copy className="h-3.5 w-3.5 text-slate-500 group-hover:text-slate-300 transition-colors" />
-                  )}
-                </div>
-                <div className="text-xs font-medium text-slate-300 truncate w-full">alice.freeman@corpcrm.dev</div>
-                <div className="text-[10px] text-slate-500 mt-0.5">Password: Employee123!</div>
-              </button>
-            </div>
-            <p className="text-[10px] text-slate-500 text-center">
-              Clicking a profile automatically fills the form and copies the email.
-            </p>
+          <div className="grid gap-3 text-sm text-zinc-600 sm:grid-cols-3">
+            {['Instant demo access', 'Role-aware dashboard', 'Calm monochrome UI'].map((item) => (
+              <div key={item} className="rounded-2xl border border-zinc-200 bg-zinc-50 px-4 py-3">
+                {item}
+              </div>
+            ))}
           </div>
+        </section>
 
-          {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-5">
-            {/* General Alert */}
+        <section className="flex items-center px-6 py-10 lg:px-10">
+          <div className="w-full">
+            <div className="mb-10">
+              <h2 className="text-3xl font-semibold tracking-[-0.04em]">Sign in</h2>
+              <p className="mt-2 text-sm text-zinc-500">Choose a demo profile or enter credentials manually.</p>
+            </div>
+
+            <div className="mb-6 grid grid-cols-2 gap-2">
+              {(Object.keys(demoProfiles) as Array<keyof typeof demoProfiles>).map((key) => (
+                <button
+                  key={key}
+                  type="button"
+                  onClick={() => chooseProfile(key)}
+                  className={`rounded-2xl border px-4 py-3 text-left transition hover:border-zinc-950 ${
+                    selectedProfile === key ? "border-zinc-950 bg-zinc-950 text-white" : "border-zinc-200 bg-white text-zinc-950"
+                  }`}
+                >
+                  <div className="flex items-center justify-between text-sm font-medium">
+                    {demoProfiles[key].label}
+                    {selectedProfile === key && <Check className="h-4 w-4" />}
+                  </div>
+                  <div className={`mt-1 truncate text-xs ${selectedProfile === key ? "text-zinc-300" : "text-zinc-500"}`}>
+                    {demoProfiles[key].email}
+                  </div>
+                </button>
+              ))}
+            </div>
+
             {generalError && (
-              <div className="p-3.5 rounded-xl bg-red-500/10 border border-red-500/30 text-red-200 text-sm flex items-start gap-3 animate-shake">
-                <AlertCircle className="h-5 w-5 text-red-400 shrink-0 mt-0.5" />
-                <span>{generalError}</span>
+              <div className="mb-4 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                {generalError}
               </div>
             )}
 
-            {/* Email Field */}
-            <div className="space-y-2">
-              <label htmlFor="email" className="block text-xs font-bold tracking-wider text-slate-300 uppercase">
-                Email Address
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <label className="block">
+                <span className="mb-2 block text-xs font-medium uppercase tracking-[0.18em] text-zinc-500">Email</span>
+                <div className="relative">
+                  <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400" />
+                  <input
+                    id="email"
+                    type="email"
+                    required
+                    placeholder="name@corpcrm.dev"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className={`w-full rounded-2xl border bg-white py-3 pl-10 pr-4 text-sm outline-none transition focus:border-zinc-950 ${
+                      fieldErrors.email?.length ? "border-red-300" : "border-zinc-200"
+                    }`}
+                  />
+                </div>
+                {fieldErrors.email?.map((err) => <span key={err} className="mt-1 block text-xs text-red-600">{err}</span>)}
               </label>
-              <div className="relative group">
-                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500 group-focus-within:text-indigo-400 transition-colors">
-                  <Mail className="h-4.5 w-4.5" />
-                </div>
-                <input
-                  id="email"
-                  type="email"
-                  required
-                  placeholder="name@corpcrm.dev"
-                  value={email}
-                  onChange={(e) => {
-                    setEmail(e.target.value);
-                    if (fieldErrors.email) {
-                      setFieldErrors({ ...fieldErrors, email: [] });
-                    }
-                  }}
-                  className={`w-full pl-10 pr-4 py-3 bg-slate-900 border rounded-xl font-medium text-sm text-white placeholder-slate-500 outline-none transition-all duration-200 ${
-                    fieldErrors.email?.length
-                      ? "border-red-500 focus:ring-2 focus:ring-red-500/20"
-                      : "border-slate-800 hover:border-slate-700 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10"
-                  }`}
-                />
-              </div>
-              {fieldErrors.email && fieldErrors.email.map((err, idx) => (
-                <p key={idx} className="text-xs text-red-400 flex items-center gap-1.5 mt-1">
-                  <AlertCircle className="h-3 w-3" /> {err}
-                </p>
-              ))}
-            </div>
 
-            {/* Password Field */}
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <label htmlFor="password" className="block text-xs font-bold tracking-wider text-slate-300 uppercase">
-                  Password
-                </label>
-              </div>
-              <div className="relative group">
-                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500 group-focus-within:text-indigo-400 transition-colors">
-                  <Lock className="h-4.5 w-4.5" />
+              <label className="block">
+                <span className="mb-2 block text-xs font-medium uppercase tracking-[0.18em] text-zinc-500">Password</span>
+                <div className="relative">
+                  <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400" />
+                  <input
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    required
+                    placeholder="••••••••"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className={`w-full rounded-2xl border bg-white py-3 pl-10 pr-11 text-sm outline-none transition focus:border-zinc-950 ${
+                      fieldErrors.password?.length ? "border-red-300" : "border-zinc-200"
+                    }`}
+                  />
+                  <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-950">
+                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </button>
                 </div>
-                <input
-                  id="password"
-                  type={showPassword ? "text" : "password"}
-                  required
-                  placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => {
-                    setPassword(e.target.value);
-                    if (fieldErrors.password) {
-                      setFieldErrors({ ...fieldErrors, password: [] });
-                    }
-                  }}
-                  className={`w-full pl-10 pr-11 py-3 bg-slate-900 border rounded-xl font-medium text-sm text-white placeholder-slate-500 outline-none transition-all duration-200 ${
-                    fieldErrors.password?.length
-                      ? "border-red-500 focus:ring-2 focus:ring-red-500/20"
-                      : "border-slate-800 hover:border-slate-700 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10"
-                  }`}
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-500 hover:text-slate-300 transition-colors cursor-pointer"
-                >
-                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                </button>
-              </div>
-              {fieldErrors.password && fieldErrors.password.map((err, idx) => (
-                <p key={idx} className="text-xs text-red-400 flex items-center gap-1.5 mt-1">
-                  <AlertCircle className="h-3 w-3" /> {err}
-                </p>
-              ))}
-            </div>
+                {fieldErrors.password?.map((err) => <span key={err} className="mt-1 block text-xs text-red-600">{err}</span>)}
+              </label>
 
-            {/* Submit Button */}
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full flex items-center justify-center gap-2 py-3 bg-gradient-to-r from-indigo-500 to-indigo-600 hover:from-indigo-600 hover:to-indigo-700 active:scale-[0.98] text-white font-semibold rounded-xl tracking-wide shadow-xl shadow-indigo-500/15 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 transition-all duration-150 mt-2"
-            >
-              {loading ? (
-                <div className="flex items-center gap-2">
-                  <svg className="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                  </svg>
-                  <span>Authenticating...</span>
-                </div>
-              ) : (
-                <>
-                  <span>Sign In to Dashboard</span>
-                  <ArrowRight className="h-4 w-4" />
-                </>
-              )}
-            </button>
-          </form>
-
-          {/* Additional text */}
-          <div className="pt-2 text-center md:text-left">
-            <span className="text-xs text-slate-500">
-              Only secure login portal is activated. Unauthorized requests are strictly logged.
-            </span>
+              <button type="submit" disabled={loading} className="flex w-full items-center justify-center gap-2 rounded-2xl bg-zinc-950 px-4 py-3 text-sm font-medium text-white transition hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-60">
+                {loading ? "Signing in..." : "Continue"}
+                {!loading && <ArrowRight className="h-4 w-4" />}
+              </button>
+            </form>
           </div>
-
-        </div>
+        </section>
       </div>
-    </div>
+    </main>
   );
 }
