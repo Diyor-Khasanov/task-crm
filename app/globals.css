@@ -15,13 +15,35 @@ html {
 
 body {
   margin: 0;
-  background:
-    radial-gradient(circle at top left, rgba(0, 0, 0, 0.035), transparent 28rem),
-    linear-gradient(180deg, #ffffff 0%, #fafafa 100%);
+  background: #ffffff;
   color: var(--foreground);
 }
 
 button,
 input {
   font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+.grid-bg {
+  background-image:
+    linear-gradient(rgba(9, 9, 11, 0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(9, 9, 11, 0.055) 1px, transparent 1px);
+  background-size: 28px 28px;
+  mask-image: radial-gradient(circle at 50% 25%, black, transparent 72%);
+}
+
+.mono-noise {
+  background-image:
+    radial-gradient(circle at 15% 20%, rgba(255,255,255,0.22) 0 1px, transparent 1px),
+    radial-gradient(circle at 80% 10%, rgba(255,255,255,0.16) 0 1px, transparent 1px),
+    linear-gradient(135deg, rgba(255,255,255,0.08) 25%, transparent 25%, transparent 50%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.08) 75%, transparent 75%);
+  background-size: 34px 34px, 48px 48px, 18px 18px;
 }
