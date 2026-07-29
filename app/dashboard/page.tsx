@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { AlertCircle, ArrowUpRight, CheckCircle2, Clock, LogOut, RefreshCw, Users } from "lucide-react";
+import { AlertCircle, ArrowUpRight, CheckCircle2, Clock, Command, LogOut, RefreshCw, Users } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 
 interface EmployeeItem {
@@ -118,11 +118,13 @@ export default function DashboardPage() {
   ];
 
   return (
-    <main className="min-h-screen bg-white text-zinc-950">
-      <header className="sticky top-0 z-20 border-b border-zinc-200 bg-white/85 backdrop-blur-xl">
+    <main className="relative min-h-screen overflow-hidden bg-white text-zinc-950">
+      <div className="absolute inset-0 grid-bg opacity-80" />
+      <div className="absolute right-[-10rem] top-24 h-96 w-96 rounded-full border-[4rem] border-black/5" />
+      <header className="sticky top-0 z-20 border-b border-zinc-200 bg-white/80 backdrop-blur-xl">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 sm:px-8">
           <div className="flex items-center gap-3">
-            <div className="h-7 w-7 rounded-full bg-zinc-950" />
+            <div className="grid h-9 w-9 place-items-center rounded-2xl bg-zinc-950 text-white shadow-[5px_5px_0_rgba(0,0,0,0.14)]"><Command className="h-4 w-4" /></div>
             <div>
               <div className="text-sm font-semibold tracking-tight">CorpCRM</div>
               <div className="text-xs text-zinc-500">{isAdmin ? "Admin console" : "Employee workspace"}</div>
@@ -134,7 +136,7 @@ export default function DashboardPage() {
               <div className="text-sm font-medium">{user.firstName} {user.lastName}</div>
               <div className="text-xs text-zinc-500">{user.position || user.role}</div>
             </div>
-            <button onClick={logout} className="inline-flex items-center gap-2 rounded-full border border-zinc-200 px-3 py-2 text-sm text-zinc-700 transition hover:border-zinc-950 hover:text-zinc-950">
+            <button onClick={logout} className="inline-flex items-center gap-2 rounded-full border border-zinc-200 bg-white px-3 py-2 text-sm font-medium text-zinc-700 transition hover:-translate-y-0.5 hover:border-zinc-950 hover:text-zinc-950 hover:shadow-[4px_4px_0_#09090b]">
               <LogOut className="h-4 w-4" />
               <span className="hidden sm:inline">Logout</span>
             </button>
@@ -142,19 +144,19 @@ export default function DashboardPage() {
         </div>
       </header>
 
-      <div className="mx-auto max-w-7xl px-5 py-8 sm:px-8 sm:py-12">
-        <section className="mb-10 grid gap-8 lg:grid-cols-[1fr_280px] lg:items-end">
+      <div className="relative mx-auto max-w-7xl px-5 py-8 sm:px-8 sm:py-12">
+        <section className="mb-10 grid gap-8 rounded-[2.5rem] bg-zinc-950 p-6 text-white shadow-[0_28px_90px_rgba(0,0,0,0.18)] sm:p-10 lg:grid-cols-[1fr_280px] lg:items-end">
           <div>
-            <p className="text-xs font-medium uppercase tracking-[0.28em] text-zinc-500">{user.role.toLowerCase()} dashboard</p>
-            <h1 className="mt-4 max-w-4xl text-5xl font-semibold tracking-[-0.06em] text-zinc-950 sm:text-7xl">
+            <p className="w-fit rounded-full border border-white/20 px-4 py-2 text-xs font-medium uppercase tracking-[0.28em] text-white/60">{user.role.toLowerCase()} dashboard</p>
+            <h1 className="mt-5 max-w-4xl text-5xl font-black leading-[0.9] tracking-[-0.07em] text-white sm:text-7xl">
               Good to see you, {user.firstName}.
             </h1>
-            <p className="mt-5 max-w-2xl text-base leading-7 text-zinc-600">
+            <p className="mt-6 max-w-2xl text-base leading-7 text-white/65">
               A focused command surface for the work that matters now: concise metrics, recent tasks, and team context.
             </p>
           </div>
 
-          <button onClick={fetchDashboardData} disabled={dataLoading} className="inline-flex items-center justify-center gap-2 rounded-full border border-zinc-200 bg-white px-4 py-2 text-sm font-medium transition hover:border-zinc-950 disabled:opacity-60">
+          <button onClick={fetchDashboardData} disabled={dataLoading} className="inline-flex items-center justify-center gap-2 rounded-full border border-white/20 bg-white px-5 py-3 text-sm font-bold text-zinc-950 transition hover:-translate-y-0.5 hover:shadow-[6px_6px_0_rgba(255,255,255,0.22)] disabled:opacity-60">
             <RefreshCw className={`h-4 w-4 ${dataLoading ? "animate-spin" : ""}`} />
             Refresh
           </button>
@@ -168,36 +170,36 @@ export default function DashboardPage() {
 
         <section className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {statCards.map((card) => (
-            <article key={card.label} className="rounded-3xl border border-zinc-200 bg-white p-5 shadow-[0_1px_0_rgba(0,0,0,0.04)]">
+            <article key={card.label} className="group rounded-[2rem] border border-zinc-200 bg-white p-5 shadow-[0_1px_0_rgba(0,0,0,0.04)] transition hover:-translate-y-1 hover:border-zinc-950 hover:shadow-[8px_8px_0_#09090b]">
               <div className="flex items-center justify-between text-zinc-500">
                 <span className="text-xs font-medium uppercase tracking-[0.18em]">{card.label}</span>
                 <card.icon className="h-4 w-4" />
               </div>
-              <div className="mt-8 text-4xl font-semibold tracking-[-0.05em]">{dataLoading && !dashboardData ? "—" : card.value}</div>
+              <div className="mt-8 text-5xl font-black tracking-[-0.08em]">{dataLoading && !dashboardData ? "—" : card.value}</div>
               <div className="mt-2 text-sm text-zinc-500">{card.detail}</div>
             </article>
           ))}
         </section>
 
         <section className="mt-8 grid gap-6 lg:grid-cols-[1fr_360px]">
-          <article className="rounded-[2rem] border border-zinc-200 bg-white p-5 sm:p-6">
+          <article className="rounded-[2.25rem] border border-zinc-200 bg-white p-5 shadow-[0_18px_60px_rgba(0,0,0,0.06)] sm:p-6">
             <div className="mb-6 flex items-center justify-between">
               <div>
                 <h2 className="text-lg font-semibold tracking-[-0.03em]">Recent tasks</h2>
                 <p className="mt-1 text-sm text-zinc-500">{isAdmin ? "Newest work across the organization." : "Your current assignment queue."}</p>
               </div>
-              <ArrowUpRight className="h-5 w-5 text-zinc-400" />
+              <div className="grid h-10 w-10 place-items-center rounded-full bg-zinc-950 text-white"><ArrowUpRight className="h-5 w-5" /></div>
             </div>
 
             {tasks.length > 0 ? (
               <div className="divide-y divide-zinc-100">
                 {tasks.map((task) => (
-                  <div key={task.id} className="grid gap-3 py-4 sm:grid-cols-[1fr_auto] sm:items-center">
+                  <div key={task.id} className="grid gap-3 py-5 transition hover:px-4 sm:grid-cols-[1fr_auto] sm:items-center">
                     <div>
                       <h3 className="font-medium tracking-[-0.02em]">{task.title}</h3>
                       <p className="mt-1 text-sm text-zinc-500">Due {new Date(task.dueDate).toLocaleDateString()} · {task.priority.toLowerCase()} priority</p>
                     </div>
-                    <span className="w-fit rounded-full border border-zinc-200 px-3 py-1 text-xs capitalize text-zinc-600">
+                    <span className="w-fit rounded-full border border-zinc-950 px-3 py-1 text-xs font-semibold capitalize text-zinc-950">
                       {formatStatus(task.status)}
                     </span>
                   </div>
@@ -210,14 +212,14 @@ export default function DashboardPage() {
             )}
           </article>
 
-          <aside className="rounded-[2rem] border border-zinc-200 bg-zinc-50 p-5 sm:p-6">
+          <aside className="rounded-[2.25rem] border border-zinc-950 bg-zinc-950 p-5 text-white shadow-[12px_12px_0_rgba(0,0,0,0.10)] sm:p-6">
             <h2 className="text-lg font-semibold tracking-[-0.03em]">{isAdmin ? "New people" : "Workspace note"}</h2>
-            <p className="mt-1 text-sm text-zinc-500">{isAdmin ? "Latest employee records." : "Session and access details."}</p>
+            <p className="mt-1 text-sm text-white/55">{isAdmin ? "Latest employee records." : "Session and access details."}</p>
 
             {isAdmin && dashboardData?.recentEmployees?.length ? (
               <div className="mt-6 space-y-3">
                 {dashboardData.recentEmployees.map((employee) => (
-                  <div key={employee.id} className="rounded-2xl border border-zinc-200 bg-white p-4">
+                  <div key={employee.id} className="rounded-2xl border border-white/15 bg-white p-4 text-zinc-950">
                     <div className="font-medium">{employee.firstName} {employee.lastName}</div>
                     <div className="mt-1 text-sm text-zinc-500">{employee.position}</div>
                     <div className="mt-3 text-xs uppercase tracking-[0.18em] text-zinc-400">{employee.role}</div>
@@ -225,7 +227,7 @@ export default function DashboardPage() {
                 ))}
               </div>
             ) : (
-              <div className="mt-6 space-y-3 text-sm leading-6 text-zinc-600">
+              <div className="mt-6 space-y-3 text-sm leading-6 text-zinc-950">
                 <p className="rounded-2xl border border-zinc-200 bg-white p-4">Authenticated through secure, httpOnly session cookies.</p>
                 <p className="rounded-2xl border border-zinc-200 bg-white p-4">The interface intentionally removes decoration so status and decisions remain clear.</p>
               </div>
