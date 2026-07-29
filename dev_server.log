@@ -5,20 +5,9 @@
 ▲ Next.js 16.2.12 (Turbopack)
 - Local:         http://localhost:3000
 - Network:       http://192.168.0.2:3000
-✓ Ready in 554ms
+✓ Ready in 548ms
 
-○ Compiling /login ...
- GET /login 200 in 5.2s (next.js: 4.8s, application-code: 423ms)
- GET /dashboard 200 in 631ms (next.js: 591ms, application-code: 41ms)
-✓ Compiled in 76ms
- GET /login 200 in 352ms (next.js: 163ms, application-code: 190ms)
- GET /login 200 in 73ms (next.js: 5ms, application-code: 68ms)
- GET /dashboard 200 in 55ms (next.js: 17ms, application-code: 39ms)
- GET /login 200 in 178ms (next.js: 66ms, application-code: 112ms)
- GET /dashboard 200 in 90ms (next.js: 20ms, application-code: 71ms)
- GET /login 200 in 78ms (next.js: 5ms, application-code: 73ms)
- GET /dashboard 200 in 46ms (next.js: 6ms, application-code: 40ms)
- GET /login 200 in 70ms (next.js: 4ms, application-code: 66ms)
- GET /dashboard 200 in 34ms (next.js: 6ms, application-code: 28ms)
- GET /login 200 in 66ms (next.js: 3ms, application-code: 63ms)
- GET /dashboard 200 in 48ms (next.js: 4ms, application-code: 44ms)
+ HEAD / 200 in 3.1s (next.js: 2.8s, application-code: 212ms)
+ GET / 200 in 109ms (next.js: 11ms, application-code: 98ms)
+ GET /login 200 in 960ms (next.js: 892ms, application-code: 67ms)
+ GET /dashboard 200 in 728ms (next.js: 687ms, application-code: 41ms)
