@@ -4,7 +4,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "CorpCRM - Role-Based CRM Portal",
-  description: "Secure, creative and fast CRM application with role-based access control.",
+  description: "Secure, ultra-minimalistic CRM application with role-based access control.",
 };
 
 export default function RootLayout({
@@ -15,9 +15,9 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className="h-full antialiased bg-slate-900 text-slate-100"
+      className="h-full antialiased bg-black text-neutral-100"
     >
-      <body className="min-h-full flex flex-col font-sans selection:bg-indigo-500 selection:text-white">
+      <body className="min-h-full flex flex-col font-sans selection:bg-neutral-800 selection:text-white bg-black">
         <AuthProvider>
           {children}
         </AuthProvider>

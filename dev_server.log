@@ -1,18 +1,8 @@
 
-> crm@0.1.0 dev
-> next dev
+> crm@0.1.0 start
+> next start
 
-▲ Next.js 16.2.12 (Turbopack)
+▲ Next.js 16.2.12
 - Local:         http://localhost:3000
 - Network:       http://192.168.0.2:3000
-✓ Ready in 561ms
-
-○ Compiling /login ...
- GET /login 200 in 5.6s (next.js: 5.0s, application-code: 537ms)
-[browser] Could not copy to clipboard NotAllowedError: Failed to execute 'writeText' on 'Clipboard': Write permission denied.
-NotAllowedError: Failed to execute 'writeText' on 'Clipboard': Write permission denied. (app/(auth)
- GET /dashboard 200 in 725ms (next.js: 676ms, application-code: 49ms)
- GET /login 200 in 92ms (next.js: 9ms, application-code: 83ms)
-[browser] Could not copy to clipboard NotAllowedError: Failed to execute 'writeText' on 'Clipboard': Write permission denied.
-NotAllowedError: Failed to execute 'writeText' on 'Clipboard': Write permission denied. (app/(auth)
- GET /dashboard 200 in 50ms (next.js: 5ms, application-code: 44ms)
+✓ Ready in 201ms

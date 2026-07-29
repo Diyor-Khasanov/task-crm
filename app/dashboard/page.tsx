@@ -5,20 +5,11 @@ import { useAuth } from "../context/AuthContext";
 import { useRouter } from "next/navigation";
 import {
   LogOut,
-  LayoutDashboard,
-  Users,
-  CheckCircle2,
-  AlertCircle,
-  Clock,
-  Briefcase,
   ChevronRight,
-  TrendingUp,
-  User,
+  RefreshCw,
   Shield,
-  Activity,
-  Calendar,
-  Sparkles,
-  RefreshCw
+  User,
+  Calendar
 } from "lucide-react";
 
 interface EmployeeItem {
@@ -69,7 +60,6 @@ export default function DashboardPage() {
   const [dataLoading, setDataLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Redirect to login if user is not authenticated
   useEffect(() => {
     if (!loading && !user) {
       router.push("/login");
@@ -77,7 +67,6 @@ export default function DashboardPage() {
   }, [user, loading, router]);
 
   const fetchDashboardData = async () => {
-    // Avoid synchronous state updates inside effect triggering cascading render warnings
     setTimeout(() => {
       setDataLoading(true);
       setError(null);
@@ -114,379 +103,357 @@ export default function DashboardPage() {
     }
   }, [user]);
 
-  // Loading page state
   if (loading || (!user && !error)) {
     return (
-      <div className="min-h-screen w-full flex flex-col justify-center items-center bg-slate-950 text-slate-100">
-        <div className="relative flex flex-col items-center gap-4">
-          <div className="h-16 w-16 rounded-2xl bg-gradient-to-tr from-indigo-500 to-emerald-400 p-4 shadow-2xl shadow-indigo-500/20 animate-bounce flex items-center justify-center">
-            <Activity className="h-full w-full text-slate-950 font-black" />
-          </div>
-          <div className="h-2 w-24 bg-slate-800 rounded-full overflow-hidden">
-            <div className="h-full w-1/2 bg-gradient-to-r from-indigo-500 to-emerald-400 rounded-full animate-infinite-scroll" />
-          </div>
-          <p className="text-sm font-semibold tracking-wider text-slate-400 uppercase animate-pulse">
-            Configuring secure session...
-          </p>
+      <div className="min-h-screen w-full flex flex-col justify-center items-center bg-black text-white">
+        <div className="flex items-center gap-3">
+          <div className="h-4 w-4 animate-spin rounded-full border border-neutral-800 border-t-neutral-200" />
+          <span className="text-xs font-mono text-neutral-400 tracking-wider">
+            Loading secure session...
+          </span>
         </div>
       </div>
     );
   }
 
-  // Fallback if not logged in after redirect
   if (!user) return null;
 
   const isAdmin = user.role === "ADMIN";
 
+  // Helper for priority display
+  const getPriorityStyle = (priority: string) => {
+    switch (priority) {
+      case "HIGH":
+        return "text-red-400 font-mono";
+      case "MEDIUM":
+        return "text-amber-400 font-mono";
+      default:
+        return "text-neutral-500 font-mono";
+    }
+  };
+
+  // Helper for status dot
+  const getStatusDot = (status: string) => {
+    switch (status) {
+      case "DONE":
+        return "bg-emerald-500";
+      case "IN_PROGRESS":
+        return "bg-blue-500 animate-pulse";
+      default:
+        return "bg-neutral-600";
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col selection:bg-indigo-500 selection:text-white">
-      {/* Top Navbar */}
-      <header className="sticky top-0 z-50 bg-slate-900/80 backdrop-blur-md border-b border-slate-800/60 px-4 sm:px-8 py-4 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="h-8 w-8 rounded-lg bg-gradient-to-tr from-indigo-500 to-emerald-400 p-1.5 shadow-md flex items-center justify-center">
-            <Activity className="h-full w-full text-slate-950" />
+    <div className="min-h-screen bg-black text-white flex flex-col selection:bg-neutral-800 selection:text-white font-sans antialiased">
+      {/* Vercel Header / Navigation bar */}
+      <header className="border-b border-neutral-900 bg-black/50 backdrop-blur-md sticky top-0 z-50 px-4 sm:px-8 py-3.5 flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          {/* Vercel Logo */}
+          <svg
+            viewBox="0 0 75 65"
+            className="h-5 w-auto fill-current text-white cursor-pointer"
+            aria-label="Vercel Logo"
+            onClick={() => router.push("/")}
+          >
+            <path d="M37.5 0 L75 65 L0 65 Z" />
+          </svg>
+
+          <span className="text-neutral-800 text-lg select-none">/</span>
+
+          {/* Breadcrumb path */}
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-medium text-neutral-400 hover:text-white transition-colors cursor-pointer">
+              {isAdmin ? "Admin" : "Employee"} Workspace
+            </span>
+            <span className="text-neutral-800 text-xs select-none">/</span>
+            <span className="text-sm font-medium text-white">
+              CorpCRM
+            </span>
           </div>
-          <span className="text-lg font-black tracking-wide bg-gradient-to-r from-indigo-400 to-emerald-300 bg-clip-text text-transparent">
-            CorpCRM
-          </span>
-          <span className="hidden sm:inline-block px-2.5 py-0.5 rounded-full bg-slate-800 border border-slate-700/60 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-            v1.2.0
-          </span>
         </div>
 
-        {/* User Info & Actions */}
-        <div className="flex items-center gap-4">
-          <div className="hidden md:flex items-center gap-3 border-r border-slate-800 pr-4">
-            <img
-              src={user.avatar || `https://i.pravatar.cc/150?u=${user.id}`}
-              alt={`${user.firstName} ${user.lastName}`}
-              className="h-9 w-9 rounded-full object-cover ring-2 ring-indigo-500/30"
-              onError={(e) => {
-                (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${user.firstName}+${user.lastName}&background=6366f1&color=fff`;
-              }}
-            />
-            <div className="text-left">
-              <div className="text-xs font-bold text-slate-200">
-                {user.firstName} {user.lastName}
-              </div>
-              <div className="text-[10px] font-semibold text-indigo-400 uppercase tracking-wider flex items-center gap-1">
-                {isAdmin ? (
-                  <Shield className="h-2.5 w-2.5 text-indigo-400" />
-                ) : (
-                  <User className="h-2.5 w-2.5 text-emerald-400" />
-                )}
-                {user.role}
-              </div>
+        {/* Right side actions & details */}
+        <div className="flex items-center gap-3">
+          <div className="hidden md:flex items-center gap-2.5 px-3 py-1.5 rounded-md bg-neutral-950 border border-neutral-900">
+            <div className="h-5 w-5 rounded-full overflow-hidden bg-neutral-900 border border-neutral-800">
+              <img
+                src={user.avatar || `https://i.pravatar.cc/150?u=${user.id}`}
+                alt={`${user.firstName} ${user.lastName}`}
+                className="h-full w-full object-cover"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${user.firstName}+${user.lastName}&background=171717&color=fff`;
+                }}
+              />
+            </div>
+            <div className="text-[11px] font-mono font-medium text-neutral-300">
+              {user.email}
             </div>
           </div>
 
           <button
             onClick={logout}
-            className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-800 hover:border-red-500/40 text-slate-300 hover:text-red-400 text-xs font-semibold tracking-wide transition-all duration-200 cursor-pointer"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-neutral-900 hover:bg-neutral-800 border border-neutral-800 hover:border-neutral-700 text-neutral-300 hover:text-white text-xs font-medium tracking-wide transition-all cursor-pointer"
           >
-            <LogOut className="h-4 w-4" />
-            <span className="hidden sm:inline">Logout</span>
+            <LogOut className="h-3.5 w-3.5" />
+            <span>Logout</span>
           </button>
         </div>
       </header>
 
-      {/* Main Container */}
-      <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-8 space-y-8">
+      {/* Main Layout Area */}
+      <main className="flex-1 max-w-6xl w-full mx-auto p-4 sm:p-8 space-y-10">
 
-        {/* Prominent High-Visibility Welcome Banner */}
-        <div className="relative overflow-hidden rounded-3xl border border-slate-800/80 bg-gradient-to-r from-slate-900 via-indigo-950/20 to-slate-900 shadow-2xl p-6 sm:p-10">
-          {/* Glowing blur effects */}
-          <div className="absolute top-0 right-0 w-[30%] h-full bg-gradient-to-l from-indigo-500/10 to-transparent blur-3xl pointer-events-none" />
-          {isAdmin ? (
-            <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-indigo-500/5 rounded-full blur-2xl pointer-events-none" />
-          ) : (
-            <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-emerald-500/5 rounded-full blur-2xl pointer-events-none" />
-          )}
-
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
-            <div className="space-y-3">
-              {/* Mandatory Prominent Role Greetings */}
+        {/* Simple Welcome Title Block - No gradients, just pure minimalist type */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-6 border-b border-neutral-900">
+          <div className="space-y-2">
+            <div className="inline-flex items-center gap-1.5 text-xs font-mono text-neutral-400">
               {isAdmin ? (
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-xs font-bold text-indigo-300 tracking-wide uppercase">
-                  <Shield className="h-3.5 w-3.5 text-indigo-400" /> Administrative Access
-                </div>
+                <>
+                  <Shield className="h-3.5 w-3.5 text-neutral-400" /> Administrative Access
+                </>
               ) : (
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-xs font-bold text-emerald-300 tracking-wide uppercase">
-                  <User className="h-3.5 w-3.5 text-emerald-400" /> Employee Workspace
-                </div>
+                <>
+                  <User className="h-3.5 w-3.5 text-neutral-400" /> Employee Workspace
+                </>
               )}
-
-              {/* HELLO ADMIN / HELLO EMPLOYEE */}
-              <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white">
-                {isAdmin ? (
-                  <>Hello <span className="bg-gradient-to-r from-indigo-400 to-indigo-300 bg-clip-text text-transparent">Admin</span></>
-                ) : (
-                  <>Hello <span className="bg-gradient-to-r from-emerald-400 to-emerald-300 bg-clip-text text-transparent">Employee</span></>
-                )}
-                , {user.firstName} {user.lastName}!
-              </h1>
-
-              <p className="text-slate-400 text-sm max-w-xl">
-                {isAdmin
-                  ? "Manage global tasks, review department statistics, oversee team productivity and coordinate strategic operations."
-                  : "Here is your task dashboard. Check pending deliverables, update progress, and coordinate with administrative project heads."}
-              </p>
             </div>
 
-            {/* Quick Context Action */}
-            <div className="flex items-center gap-4 bg-slate-950/40 border border-slate-800/40 p-4 rounded-2xl backdrop-blur-sm self-start md:self-auto min-w-[220px]">
+            <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-white">
+              {isAdmin ? "Hello Admin" : "Hello Employee"}, {user.firstName} {user.lastName}
+            </h1>
+
+            <p className="text-neutral-500 text-sm max-w-xl font-normal leading-relaxed">
+              {isAdmin
+                ? "Oversee team tasks, monitor analytics, and manage the system registry."
+                : "Review and update your assigned tasks and sync deliverables."}
+            </p>
+          </div>
+
+          {/* Quick Stats Summary Row */}
+          <div className="flex items-center gap-3.5 px-4 py-3 bg-neutral-950 border border-neutral-900 rounded-md self-start md:self-auto min-w-[260px]">
+            <div className="h-10 w-10 rounded-full overflow-hidden bg-neutral-900 border border-neutral-800 shrink-0">
               <img
                 src={user.avatar || `https://i.pravatar.cc/150?u=${user.id}`}
                 alt={`${user.firstName}`}
-                className="h-12 w-12 rounded-xl object-cover ring-2 ring-slate-800"
+                className="h-full w-full object-cover"
                 onError={(e) => {
-                  (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${user.firstName}+${user.lastName}&background=6366f1&color=fff`;
+                  (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${user.firstName}+${user.lastName}&background=171717&color=fff`;
                 }}
               />
-              <div className="space-y-0.5">
-                <div className="text-xs text-slate-400 font-semibold">Logged-in User</div>
-                <div className="text-sm font-bold text-slate-100">{user.email}</div>
-                <div className="text-[10px] text-slate-500 font-bold">{user.position || "Staff"}</div>
-              </div>
+            </div>
+            <div className="space-y-0.5 truncate">
+              <div className="text-[10px] font-mono text-neutral-500 uppercase tracking-widest">Active Profile</div>
+              <div className="text-xs font-semibold text-neutral-200 truncate">{user.firstName} {user.lastName}</div>
+              <div className="text-[10px] font-mono text-neutral-400 truncate">{user.position || "Staff Consultant"}</div>
             </div>
           </div>
         </div>
 
-        {/* Dashboard Statistics Section */}
-        <div className="space-y-4">
+        {/* Workforce Analytics Title & Statistics Grid */}
+        <div className="space-y-5">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <LayoutDashboard className="h-5 w-5 text-indigo-400" />
-              <h2 className="text-lg font-bold text-white tracking-wide">Workforce Analytics</h2>
-            </div>
+            <h2 className="text-xs font-mono tracking-wider text-neutral-400 uppercase">
+              System Indicators
+            </h2>
 
             {/* Refresh Button */}
             <button
               onClick={fetchDashboardData}
               disabled={dataLoading}
-              className="flex items-center gap-1.5 px-3 py-1.5 text-xs text-slate-400 hover:text-white bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-lg cursor-pointer transition-all disabled:opacity-50"
+              className="flex items-center gap-1 px-2.5 py-1 text-xs text-neutral-400 hover:text-white bg-neutral-950 border border-neutral-900 hover:border-neutral-800 rounded-md cursor-pointer transition-all disabled:opacity-50"
             >
-              <RefreshCw className={`h-3.5 w-3.5 ${dataLoading ? "animate-spin" : ""}`} />
-              <span>Refresh</span>
+              <RefreshCw className={`h-3 w-3 ${dataLoading ? "animate-spin" : ""}`} />
+              <span className="font-mono text-[10px]">Sync</span>
             </button>
           </div>
 
-          {/* Loading Stats Placeholder */}
+          {/* Stats Cards Grid - Pure Monochromatic Vercel design */}
           {dataLoading && !dashboardData ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="h-28 rounded-2xl bg-slate-900/50 border border-slate-800/80 animate-pulse" />
+                <div key={i} className="h-24 rounded-md bg-neutral-950 border border-neutral-900 animate-pulse" />
               ))}
             </div>
           ) : error ? (
-            <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-300 text-sm flex items-center gap-3">
-              <AlertCircle className="h-5 w-5 text-red-400 shrink-0" />
+            <div className="p-4 rounded-md bg-neutral-950 border border-red-900/30 text-red-400 text-xs flex items-center gap-2 font-mono">
+              <span className="h-1.5 w-1.5 rounded-full bg-red-500 shrink-0" />
               <span>{error}</span>
             </div>
           ) : dashboardData ? (
-            /* Render Real Stats Cards */
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
 
-              {/* Card 1: Total Employees or Assigned Tasks */}
+              {/* Card 1: Headcount or Assigned workload */}
               {isAdmin ? (
-                <div className="p-5 rounded-2xl bg-gradient-to-br from-slate-900 to-slate-950 border border-slate-800 hover:border-slate-700/80 transition-all duration-300 group shadow-lg">
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total Headcount</span>
-                    <div className="p-2 rounded-xl bg-indigo-500/10 text-indigo-400 group-hover:scale-110 transition-transform">
-                      <Users className="h-5 w-5" />
-                    </div>
-                  </div>
-                  <div className="text-3xl font-black text-white">{dashboardData.stats.totalEmployees || 0}</div>
-                  <div className="text-[10px] text-slate-500 font-semibold mt-1 flex items-center gap-1">
-                    <TrendingUp className="h-3 w-3 text-emerald-400" /> Active employees registered
-                  </div>
+                <div className="p-5 rounded-md bg-neutral-950/40 border border-neutral-900 hover:border-neutral-800 transition-colors">
+                  <div className="text-[10px] font-mono text-neutral-500 uppercase tracking-wider mb-2">Total Headcount</div>
+                  <div className="text-2xl font-semibold text-white tracking-tight">{dashboardData.stats.totalEmployees || 0}</div>
+                  <div className="text-[10px] font-mono text-neutral-600 mt-2">Active records registered</div>
                 </div>
               ) : (
-                <div className="p-5 rounded-2xl bg-gradient-to-br from-slate-900 to-slate-950 border border-slate-800 hover:border-slate-700/80 transition-all duration-300 group shadow-lg">
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Assigned Inbox</span>
-                    <div className="p-2 rounded-xl bg-indigo-500/10 text-indigo-400 group-hover:scale-110 transition-transform">
-                      <Briefcase className="h-5 w-5" />
-                    </div>
-                  </div>
-                  <div className="text-3xl font-black text-white">{dashboardData.stats.assignedTasks || 0}</div>
-                  <div className="text-[10px] text-slate-500 font-semibold mt-1 flex items-center gap-1">
-                    <Sparkles className="h-3 w-3 text-indigo-400" /> Workload currently active
-                  </div>
+                <div className="p-5 rounded-md bg-neutral-950/40 border border-neutral-900 hover:border-neutral-800 transition-colors">
+                  <div className="text-[10px] font-mono text-neutral-500 uppercase tracking-wider mb-2">Assigned Workloads</div>
+                  <div className="text-2xl font-semibold text-white tracking-tight">{dashboardData.stats.assignedTasks || 0}</div>
+                  <div className="text-[10px] font-mono text-neutral-600 mt-2">Designated direct inbox</div>
                 </div>
               )}
 
-              {/* Card 2: Completed Tasks */}
-              <div className="p-5 rounded-2xl bg-gradient-to-br from-slate-900 to-slate-950 border border-slate-800 hover:border-slate-700/80 transition-all duration-300 group shadow-lg">
-                <div className="flex items-center justify-between mb-3">
-                  <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Completed Tasks</span>
-                  <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-400 group-hover:scale-110 transition-transform">
-                    <CheckCircle2 className="h-5 w-5" />
-                  </div>
-                </div>
-                <div className="text-3xl font-black text-white">{dashboardData.stats.completedTasks || 0}</div>
-                <div className="text-[10px] text-slate-500 font-semibold mt-1">Successfully resolved tasks</div>
+              {/* Card 2: Completed */}
+              <div className="p-5 rounded-md bg-neutral-950/40 border border-neutral-900 hover:border-neutral-800 transition-colors">
+                <div className="text-[10px] font-mono text-neutral-500 uppercase tracking-wider mb-2">Completed Tasks</div>
+                <div className="text-2xl font-semibold text-white tracking-tight">{dashboardData.stats.completedTasks || 0}</div>
+                <div className="text-[10px] font-mono text-neutral-600 mt-2">Marked resolve / archived</div>
               </div>
 
-              {/* Card 3: Pending/Active Tasks */}
-              <div className="p-5 rounded-2xl bg-gradient-to-br from-slate-900 to-slate-950 border border-slate-800 hover:border-slate-700/80 transition-all duration-300 group shadow-lg">
-                <div className="flex items-center justify-between mb-3">
-                  <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
-                    {isAdmin ? "Pending Workloads" : "Your Pending Tasks"}
-                  </span>
-                  <div className="p-2 rounded-xl bg-amber-500/10 text-amber-400 group-hover:scale-110 transition-transform">
-                    <Clock className="h-5 w-5" />
-                  </div>
-                </div>
-                <div className="text-3xl font-black text-white">{dashboardData.stats.pendingTasks || 0}</div>
-                <div className="text-[10px] text-slate-500 font-semibold mt-1">Awaiting actions/verification</div>
+              {/* Card 3: Pending */}
+              <div className="p-5 rounded-md bg-neutral-950/40 border border-neutral-900 hover:border-neutral-800 transition-colors">
+                <div className="text-[10px] font-mono text-neutral-500 uppercase tracking-wider mb-2">Pending Actions</div>
+                <div className="text-2xl font-semibold text-white tracking-tight">{dashboardData.stats.pendingTasks || 0}</div>
+                <div className="text-[10px] font-mono text-neutral-600 mt-2">Active sprint deliverables</div>
               </div>
 
-              {/* Card 4: Overdue Tasks */}
-              <div className="p-5 rounded-2xl bg-gradient-to-br from-slate-900 to-slate-950 border border-slate-800 hover:border-slate-700/80 transition-all duration-300 group shadow-lg">
-                <div className="flex items-center justify-between mb-3">
-                  <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Overdue Alerts</span>
-                  <div className="p-2 rounded-xl bg-red-500/10 text-red-400 group-hover:scale-110 transition-transform">
-                    <AlertCircle className="h-5 w-5" />
-                  </div>
-                </div>
-                <div className="text-3xl font-black text-red-400">{dashboardData.stats.overdueTasks || 0}</div>
-                <div className="text-[10px] text-slate-500 font-semibold mt-1">Past designated deadlines</div>
+              {/* Card 4: Overdue Alerts */}
+              <div className="p-5 rounded-md bg-neutral-950/40 border border-neutral-900 hover:border-neutral-800 transition-colors">
+                <div className="text-[10px] font-mono text-neutral-500 uppercase tracking-wider mb-2">Overdue Alerts</div>
+                <div className="text-2xl font-semibold text-red-500 tracking-tight">{dashboardData.stats.overdueTasks || 0}</div>
+                <div className="text-[10px] font-mono text-neutral-600 mt-2">Past standard due dates</div>
               </div>
 
             </div>
           ) : null}
         </div>
 
-        {/* Detailed Lists: Recent Tasks */}
+        {/* Detailed Content Split Grid */}
         {dashboardData && (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 pt-2">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 pt-2">
 
-            {/* Left section: tasks list (takes 2 cols) */}
+            {/* Left section: Task rows (takes 2 columns) */}
             <div className="lg:col-span-2 space-y-4">
               <div className="flex items-center justify-between">
-                <h3 className="text-sm font-bold uppercase tracking-wider text-slate-400">
-                  {isAdmin ? "5 Newest Enterprise Tasks" : "Your Assigned Workload Items"}
+                <h3 className="text-xs font-mono tracking-wider text-neutral-400 uppercase">
+                  {isAdmin ? "Enterprise Task Feed" : "Your Assigned Sprint Items"}
                 </h3>
-                <span className="text-xs text-indigo-400 font-semibold">View all tasks →</span>
+                <span className="text-[10px] font-mono text-neutral-500 hover:text-white cursor-pointer transition-colors uppercase">
+                  View All Tasks
+                </span>
               </div>
 
-              <div className="p-6 rounded-3xl bg-slate-900/30 border border-slate-800/80 backdrop-blur-sm space-y-4">
-                {/* Check list content */}
+              <div className="bg-neutral-950/30 border border-neutral-900 rounded-md divide-y divide-neutral-900">
                 {isAdmin && dashboardData.recentTasks && dashboardData.recentTasks.length > 0 ? (
-                  <div className="divide-y divide-slate-800/60">
-                    {dashboardData.recentTasks.map((task: TaskItem) => (
-                      <div key={task.id} className="py-4 first:pt-0 last:pb-0 flex items-center justify-between gap-4">
-                        <div className="space-y-1">
-                          <h4 className="text-sm font-bold text-white hover:text-indigo-400 transition-colors cursor-pointer line-clamp-1">{task.title}</h4>
-                          <div className="flex items-center gap-2 text-xs text-slate-500">
-                            <span className={`px-2 py-0.5 rounded-md text-[10px] font-extrabold ${
-                              task.priority === "HIGH" ? "bg-red-500/10 text-red-400" :
-                              task.priority === "MEDIUM" ? "bg-amber-500/10 text-amber-400" : "bg-slate-800 text-slate-400"
-                            }`}>{task.priority}</span>
-                            <span className="text-slate-600">•</span>
-                            <span className="flex items-center gap-1"><Calendar className="h-3 w-3" /> Due {new Date(task.dueDate).toLocaleDateString()}</span>
-                          </div>
-                        </div>
+                  dashboardData.recentTasks.map((task: TaskItem) => (
+                    <div key={task.id} className="p-4 flex items-center justify-between gap-4 hover:bg-neutral-950/70 transition-colors">
+                      <div className="space-y-1 truncate">
                         <div className="flex items-center gap-2">
-                          <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold border ${
-                            task.status === "DONE" ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-300" :
-                            task.status === "IN_PROGRESS" ? "bg-indigo-500/10 border-indigo-500/20 text-indigo-300" :
-                            "bg-slate-800 border-slate-700/60 text-slate-400"
-                          }`}>{task.status}</span>
-                          <ChevronRight className="h-4 w-4 text-slate-600" />
+                          <span className={`h-1.5 w-1.5 rounded-full ${getStatusDot(task.status)} shrink-0`} />
+                          <h4 className="text-sm font-medium text-white truncate hover:text-neutral-300 cursor-pointer">{task.title}</h4>
+                        </div>
+                        <div className="flex items-center gap-2.5 text-[11px] font-mono text-neutral-500 pl-3.5">
+                          <span className={getPriorityStyle(task.priority)}>{task.priority}</span>
+                          <span>•</span>
+                          <span className="flex items-center gap-1 text-[10px] text-neutral-500">
+                            <Calendar className="h-3 w-3 text-neutral-600" /> Due {new Date(task.dueDate).toLocaleDateString()}
+                          </span>
                         </div>
                       </div>
-                    ))}
-                  </div>
+                      <div className="flex items-center gap-3 shrink-0">
+                        <span className="text-[10px] font-mono px-2 py-0.5 rounded border border-neutral-900 text-neutral-400 bg-neutral-950">
+                          {task.status}
+                        </span>
+                        <ChevronRight className="h-4 w-4 text-neutral-700" />
+                      </div>
+                    </div>
+                  ))
                 ) : !isAdmin && dashboardData.myTasks && dashboardData.myTasks.length > 0 ? (
-                  <div className="divide-y divide-slate-800/60">
-                    {dashboardData.myTasks.map((task: TaskItem) => (
-                      <div key={task.id} className="py-4 first:pt-0 last:pb-0 flex items-center justify-between gap-4">
-                        <div className="space-y-1">
-                          <h4 className="text-sm font-bold text-white hover:text-emerald-400 transition-colors cursor-pointer line-clamp-1">{task.title}</h4>
-                          <div className="flex items-center gap-2 text-xs text-slate-500">
-                            <span className={`px-2 py-0.5 rounded-md text-[10px] font-extrabold ${
-                              task.priority === "HIGH" ? "bg-red-500/10 text-red-400" :
-                              task.priority === "MEDIUM" ? "bg-amber-500/10 text-amber-400" : "bg-slate-800 text-slate-400"
-                            }`}>{task.priority}</span>
-                            <span className="text-slate-600">•</span>
-                            <span className="flex items-center gap-1"><Calendar className="h-3 w-3" /> Due {new Date(task.dueDate).toLocaleDateString()}</span>
-                          </div>
-                        </div>
+                  dashboardData.myTasks.map((task: TaskItem) => (
+                    <div key={task.id} className="p-4 flex items-center justify-between gap-4 hover:bg-neutral-950/70 transition-colors">
+                      <div className="space-y-1 truncate">
                         <div className="flex items-center gap-2">
-                          <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold border ${
-                            task.status === "DONE" ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-300" :
-                            task.status === "IN_PROGRESS" ? "bg-indigo-500/10 border-indigo-500/20 text-indigo-300" :
-                            "bg-slate-800 border-slate-700/60 text-slate-400"
-                          }`}>{task.status}</span>
-                          <ChevronRight className="h-4 w-4 text-slate-600" />
+                          <span className={`h-1.5 w-1.5 rounded-full ${getStatusDot(task.status)} shrink-0`} />
+                          <h4 className="text-sm font-medium text-white truncate hover:text-neutral-300 cursor-pointer">{task.title}</h4>
+                        </div>
+                        <div className="flex items-center gap-2.5 text-[11px] font-mono text-neutral-500 pl-3.5">
+                          <span className={getPriorityStyle(task.priority)}>{task.priority}</span>
+                          <span>•</span>
+                          <span className="flex items-center gap-1 text-[10px] text-neutral-500">
+                            <Calendar className="h-3 w-3 text-neutral-600" /> Due {new Date(task.dueDate).toLocaleDateString()}
+                          </span>
                         </div>
                       </div>
-                    ))}
-                  </div>
+                      <div className="flex items-center gap-3 shrink-0">
+                        <span className="text-[10px] font-mono px-2 py-0.5 rounded border border-neutral-900 text-neutral-400 bg-neutral-950">
+                          {task.status}
+                        </span>
+                        <ChevronRight className="h-4 w-4 text-neutral-700" />
+                      </div>
+                    </div>
+                  ))
                 ) : (
-                  <div className="py-8 text-center space-y-2">
-                    <Briefcase className="h-8 w-8 text-slate-700 mx-auto" />
-                    <p className="text-sm font-bold text-slate-500">No recent tasks available</p>
-                    <p className="text-xs text-slate-600">Great job! All systems are currently fully up-to-date.</p>
+                  <div className="py-12 text-center space-y-2">
+                    <p className="text-xs font-mono text-neutral-500">No active tasks</p>
+                    <p className="text-[11px] text-neutral-600">All registered system deliverables are up-to-date.</p>
                   </div>
                 )}
               </div>
             </div>
 
-            {/* Right section: employees or notes */}
+            {/* Right section: employees list or developer system notes */}
             <div className="space-y-4">
-              <h3 className="text-sm font-bold uppercase tracking-wider text-slate-400">
-                {isAdmin ? "Recently Added Employees" : "Enterprise System Notes"}
+              <h3 className="text-xs font-mono tracking-wider text-neutral-400 uppercase">
+                {isAdmin ? "Team Directory" : "System Environment"}
               </h3>
 
-              <div className="p-6 rounded-3xl bg-slate-900/30 border border-slate-800/80 backdrop-blur-sm h-full">
+              <div className="bg-neutral-950/30 border border-neutral-900 rounded-md p-5 space-y-4">
                 {isAdmin && dashboardData.recentEmployees && dashboardData.recentEmployees.length > 0 ? (
                   <div className="space-y-4">
                     {dashboardData.recentEmployees.map((emp: EmployeeItem) => (
-                      <div key={emp.id} className="flex items-center gap-3">
-                        <img
-                          src={emp.avatar || `https://i.pravatar.cc/150?u=${emp.id}`}
-                          alt={emp.firstName}
-                          className="h-9 w-9 rounded-full object-cover ring-1 ring-slate-800"
-                          onError={(e) => {
-                            (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${emp.firstName}+${emp.lastName}&background=10b981&color=fff`;
-                          }}
-                        />
-                        <div className="text-left flex-1 min-w-0">
-                          <h5 className="text-xs font-bold text-slate-200 truncate">{emp.firstName} {emp.lastName}</h5>
-                          <p className="text-[10px] text-slate-500 truncate font-semibold">{emp.position}</p>
+                      <div key={emp.id} className="flex items-center justify-between gap-3 text-left">
+                        <div className="flex items-center gap-2.5 truncate">
+                          <div className="h-7 w-7 rounded-full overflow-hidden bg-neutral-900 border border-neutral-800">
+                            <img
+                              src={emp.avatar || `https://i.pravatar.cc/150?u=${emp.id}`}
+                              alt={emp.firstName}
+                              className="h-full w-full object-cover"
+                              onError={(e) => {
+                                (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${emp.firstName}+${emp.lastName}&background=171717&color=fff`;
+                              }}
+                            />
+                          </div>
+                          <div className="truncate">
+                            <h5 className="text-xs font-medium text-neutral-200 truncate">{emp.firstName} {emp.lastName}</h5>
+                            <p className="text-[10px] text-neutral-500 truncate font-mono">{emp.position}</p>
+                          </div>
                         </div>
-                        <span className="text-[10px] font-bold text-indigo-400 uppercase tracking-wider px-2 py-0.5 rounded bg-indigo-500/10">
+                        <span className="text-[9px] font-mono text-neutral-400 uppercase border border-neutral-900 bg-neutral-950 px-1.5 py-0.5 rounded">
                           {emp.role}
                         </span>
                       </div>
                     ))}
                   </div>
                 ) : (
-                  <div className="space-y-4 text-slate-400 text-xs">
-                    <div className="p-3.5 rounded-2xl bg-indigo-500/5 border border-indigo-500/10 space-y-1">
-                      <div className="font-bold text-slate-200 flex items-center gap-1.5 text-xs text-indigo-300">
-                        <Shield className="h-3.5 w-3.5" /> High Privilege Status
+                  <div className="space-y-4">
+                    <div className="space-y-1">
+                      <div className="text-xs font-mono text-neutral-300 flex items-center gap-1.5">
+                        <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 shrink-0" /> Secure Sessions Enabled
                       </div>
-                      <p className="text-slate-400 leading-relaxed text-[11px]">
-                        Cookies are saved in httpOnly container. Browser javascript cannot intercept token.
+                      <p className="text-[11px] text-neutral-500 leading-relaxed font-sans">
+                        Session credentials automatically populate through httpOnly containers. JS token theft is mitigated.
                       </p>
                     </div>
 
-                    <div className="p-3.5 rounded-2xl bg-slate-800/30 border border-slate-800/50 space-y-1">
-                      <div className="font-bold text-slate-200 flex items-center gap-1.5 text-xs text-emerald-300">
-                        <CheckCircle2 className="h-3.5 w-3.5" /> Safe Sessions Enabled
+                    <div className="space-y-1 pt-2 border-t border-neutral-900">
+                      <div className="text-xs font-mono text-neutral-300 flex items-center gap-1.5">
+                        <span className="h-1.5 w-1.5 rounded-full bg-blue-500 shrink-0" /> Enterprise Hub Connected
                       </div>
-                      <p className="text-slate-400 leading-relaxed text-[11px]">
-                        Session cookies carries credentials for you automatically on subsequent requests.
+                      <p className="text-[11px] text-neutral-500 leading-relaxed font-sans">
+                        Your browser request is proxying seamlessly back to the regional central datastore.
                       </p>
                     </div>
 
-                    <p className="text-[10px] text-slate-600 italic">
-                      Systems checks pass. Connected to Vercel API Hub.
-                    </p>
+                    <div className="pt-2 border-t border-neutral-900 text-center">
+                      <p className="text-[9px] text-neutral-600 font-mono italic">
+                        Connected to Vercel API Core. All checks pass.
+                      </p>
+                    </div>
                   </div>
                 )}
               </div>
