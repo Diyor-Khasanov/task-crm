@@ -3,8 +3,8 @@ import { AuthProvider } from "./context/AuthContext";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "CorpCRM - Role-Based CRM Portal",
-  description: "Secure, creative and fast CRM application with role-based access control.",
+  title: "CorpCRM",
+  description: "A minimal CRM workspace for teams, tasks, and role-based operations.",
 };
 
 export default function RootLayout({
@@ -13,14 +13,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className="h-full antialiased bg-slate-900 text-slate-100"
-    >
-      <body className="min-h-full flex flex-col font-sans selection:bg-indigo-500 selection:text-white">
-        <AuthProvider>
-          {children}
-        </AuthProvider>
+    <html lang="en" className="h-full bg-white antialiased">
+      <body className="min-h-full bg-white font-sans text-zinc-950 selection:bg-zinc-950 selection:text-white">
+        <AuthProvider>{children}</AuthProvider>
       </body>
     </html>
   );
