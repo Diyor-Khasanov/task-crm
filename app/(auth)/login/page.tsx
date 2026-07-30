@@ -71,7 +71,7 @@ export default function LoginPage() {
 
   if (authLoading) {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-[#fafafa] text-zinc-500">
+      <main className="flex min-h-screen items-center justify-center crm-app-shell text-zinc-500">
         <div className="flex flex-col items-center gap-4">
           <div className="h-6 w-6 animate-spin rounded-full border border-zinc-200 border-t-zinc-900" />
           <p className="text-[10px] uppercase tracking-[0.24em] font-medium text-zinc-400">Verifying session</p>
@@ -85,28 +85,28 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="relative flex min-h-screen flex-col items-center justify-center bg-[#fafafa] px-4 py-16 text-zinc-900 antialiased">
-      <div className="w-full max-w-[400px]">
+    <main className="relative flex min-h-screen flex-col items-center justify-center crm-app-shell px-4 py-16">
+      <div className="w-full max-w-[440px]">
 
         {/* Geist minimalist logo: solid black triangle */}
         <div className="mb-8 flex flex-col items-center">
           <svg
-            className="h-8 w-8 text-black transition-transform hover:scale-105"
+            className="h-9 w-9 text-zinc-950 drop-shadow-sm transition-transform hover:scale-105"
             viewBox="0 0 75 65"
             fill="currentColor"
           >
             <polygon points="37.5,0 75,65 0,65" />
           </svg>
-          <h1 className="mt-4 text-xl font-semibold tracking-tight text-zinc-900">
+          <h1 className="mt-5 crm-page-title text-center">
             Sign in to CorpCRM
           </h1>
-          <p className="mt-1.5 text-center text-xs text-zinc-500">
+          <p className="crm-page-subtitle text-center">
             Enter your credentials or choose a quick demo account
           </p>
         </div>
 
         {/* Demo profiles selector tab bar */}
-        <div className="mb-6 grid grid-cols-2 gap-1.5 p-1 rounded-lg border border-zinc-200/80 bg-zinc-100/50">
+        <div className="mb-6 grid grid-cols-2 gap-2 rounded-[var(--radius-md)] border border-[var(--border)] bg-white/55 p-1.5 shadow-sm backdrop-blur">
           {(Object.keys(demoProfiles) as Array<keyof typeof demoProfiles>).map((key) => {
             const active = selectedProfile === key;
             return (
@@ -116,8 +116,8 @@ export default function LoginPage() {
                 onClick={() => chooseProfile(key)}
                 className={`relative flex flex-col items-start px-3.5 py-2 rounded-md border transition-all duration-150 text-left ${
                   active
-                    ? "bg-white border-zinc-200 text-zinc-900 shadow-xs"
-                    : "bg-transparent border-transparent text-zinc-500 hover:text-zinc-800 hover:bg-zinc-200/30"
+                    ? "bg-white border-zinc-200 text-zinc-950 shadow-sm"
+                    : "bg-transparent border-transparent text-zinc-500 hover:text-zinc-950 hover:bg-white/70"
                 }`}
               >
                 <div className="flex w-full items-center justify-between text-xs font-semibold tracking-tight">
@@ -137,9 +137,9 @@ export default function LoginPage() {
         </div>
 
         {/* Login form container */}
-        <div className="rounded-xl border border-zinc-200/80 bg-white p-8 shadow-[0_8px_30px_rgba(0,0,0,0.03)]">
+        <div className="crm-card-elevated p-8">
           {generalError && (
-            <div className="mb-5 rounded-lg border border-red-100 bg-red-50/60 px-4 py-3 text-xs font-medium text-red-600">
+            <div className="crm-alert-error mb-5">
               {generalError}
             </div>
           )}
@@ -148,7 +148,7 @@ export default function LoginPage() {
             <div>
               <label
                 htmlFor="email"
-                className="mb-1.5 block text-xs font-medium text-zinc-600"
+                className="crm-label"
               >
                 Email Address
               </label>
@@ -164,7 +164,7 @@ export default function LoginPage() {
                     setEmail(e.target.value);
                     setSelectedProfile(null);
                   }}
-                  className={`w-full rounded-md border bg-white py-2 pl-9 pr-3 text-sm text-zinc-900 placeholder-zinc-400 outline-none transition duration-150 focus:border-black focus:ring-1 focus:ring-black ${
+                  className={`crm-control crm-control-icon-left ${
                     fieldErrors.email?.length ? "border-red-400 focus:border-red-400 focus:ring-red-400" : "border-zinc-200"
                   }`}
                 />
@@ -179,7 +179,7 @@ export default function LoginPage() {
             <div>
               <label
                 htmlFor="password"
-                className="mb-1.5 block text-xs font-medium text-zinc-600"
+                className="crm-label"
               >
                 Password
               </label>
@@ -195,7 +195,7 @@ export default function LoginPage() {
                     setPassword(e.target.value);
                     setSelectedProfile(null);
                   }}
-                  className={`w-full rounded-md border bg-white py-2 pl-9 pr-10 text-sm text-zinc-900 placeholder-zinc-400 outline-none transition duration-150 focus:border-black focus:ring-1 focus:ring-black ${
+                  className={`crm-control crm-control-icon-left crm-control-icon-right ${
                     fieldErrors.password?.length ? "border-red-400 focus:border-red-400 focus:ring-red-400" : "border-zinc-200"
                   }`}
                 />
@@ -222,7 +222,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="mt-2 relative flex w-full items-center justify-center gap-1.5 rounded-md bg-black py-2 px-4 text-xs font-medium text-white transition duration-150 hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-50"
+              className="crm-button-primary mt-2 w-full"
             >
               {loading ? "Signing in..." : "Continue"}
               {!loading && <ArrowRight className="h-4 w-4" />}
@@ -232,7 +232,7 @@ export default function LoginPage() {
 
         {/* Minimalist footer info */}
         <p className="mt-8 text-center text-[10px] text-zinc-400 font-medium">
-          Secure, HTTPOnly encrypted session authorization · CorpCRM 2026
+          Design System 1 · Secure HTTPOnly session authorization · CorpCRM 2026
         </p>
       </div>
     </main>

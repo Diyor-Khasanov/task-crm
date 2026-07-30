@@ -121,14 +121,14 @@ export default function DashboardPage() {
 
   return (
     <SidebarLayout>
-      <div className="p-6 md:p-8 space-y-8 max-w-7xl mx-auto">
+      <div className="crm-page">
         {/* Welcome Section */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-zinc-900 tracking-tight">
+            <h1 className="crm-page-title">
               Welcome back, {user?.firstName}!
             </h1>
-            <p className="text-sm text-zinc-500 mt-1">
+            <p className="crm-page-subtitle">
               Here is an overview of company metrics and real-time activities.
             </p>
           </div>
@@ -153,7 +153,7 @@ export default function DashboardPage() {
         {/* Stats Cards Row */}
         <div className="grid gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
           {/* Total Employees / Assigned Tasks */}
-          <div className="bg-white rounded-xl border border-zinc-200/80 p-6 flex flex-col justify-between shadow-[0_1px_3px_rgba(0,0,0,0.01)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.03)] transition duration-200">
+          <div className="crm-card p-6 flex flex-col justify-between shadow-[0_1px_3px_rgba(0,0,0,0.01)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.03)] transition duration-200">
             <div className="flex items-start justify-between">
               <div>
                 <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">
@@ -170,7 +170,7 @@ export default function DashboardPage() {
           </div>
 
           {/* Active Tasks */}
-          <div className="bg-white rounded-xl border border-zinc-200/80 p-6 flex flex-col justify-between shadow-[0_1px_3px_rgba(0,0,0,0.01)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.03)] transition duration-200">
+          <div className="crm-card p-6 flex flex-col justify-between shadow-[0_1px_3px_rgba(0,0,0,0.01)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.03)] transition duration-200">
             <div className="flex items-start justify-between">
               <div>
                 <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">Active tasks</span>
@@ -185,7 +185,7 @@ export default function DashboardPage() {
           </div>
 
           {/* Completed Tasks */}
-          <div className="bg-white rounded-xl border border-zinc-200/80 p-6 flex flex-col justify-between shadow-[0_1px_3px_rgba(0,0,0,0.01)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.03)] transition duration-200">
+          <div className="crm-card p-6 flex flex-col justify-between shadow-[0_1px_3px_rgba(0,0,0,0.01)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.03)] transition duration-200">
             <div className="flex items-start justify-between">
               <div>
                 <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">Completed tasks</span>
@@ -200,7 +200,7 @@ export default function DashboardPage() {
           </div>
 
           {/* Pending Tasks */}
-          <div className="bg-white rounded-xl border border-zinc-200/80 p-6 flex flex-col justify-between shadow-[0_1px_3px_rgba(0,0,0,0.01)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.03)] transition duration-200">
+          <div className="crm-card p-6 flex flex-col justify-between shadow-[0_1px_3px_rgba(0,0,0,0.01)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.03)] transition duration-200">
             <div className="flex items-start justify-between">
               <div>
                 <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">Pending tasks</span>
@@ -224,7 +224,7 @@ export default function DashboardPage() {
         {/* Chart (Task Activity) & Recent Employees Split Grid */}
         <div className="grid gap-6 grid-cols-1 lg:grid-cols-[1fr_360px]">
           {/* Task Activity Chart Card */}
-          <div className="bg-white rounded-xl border border-zinc-200/80 p-6 flex flex-col shadow-[0_1px_3px_rgba(0,0,0,0.01)]">
+          <div className="crm-card p-6 flex flex-col shadow-[0_1px_3px_rgba(0,0,0,0.01)]">
             <div className="flex items-center justify-between mb-6">
               <div>
                 <h3 className="font-semibold text-zinc-900 text-sm">Task activity</h3>
@@ -309,7 +309,7 @@ export default function DashboardPage() {
           </div>
 
           {/* Recent Employees Card */}
-          <div className="bg-white rounded-xl border border-zinc-200/80 p-6 flex flex-col shadow-[0_1px_3px_rgba(0,0,0,0.01)]">
+          <div className="crm-card p-6 flex flex-col shadow-[0_1px_3px_rgba(0,0,0,0.01)]">
             <div className="flex items-center justify-between mb-5">
               <h3 className="font-semibold text-zinc-900 text-sm">Recent employees</h3>
             </div>
@@ -349,7 +349,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Recent Tasks Card */}
-        <div className="bg-white rounded-xl border border-zinc-200/80 p-6 shadow-[0_1px_3px_rgba(0,0,0,0.01)]">
+        <div className="crm-card p-6 shadow-[0_1px_3px_rgba(0,0,0,0.01)]">
           <div className="flex items-center justify-between mb-5">
             <div>
               <h3 className="font-semibold text-zinc-900 text-sm">

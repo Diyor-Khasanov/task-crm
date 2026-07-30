@@ -155,11 +155,11 @@ export default function ProfilePage() {
 
   return (
     <SidebarLayout>
-      <div className="p-6 md:p-8 space-y-8 max-w-4xl mx-auto">
+      <div className="crm-page-narrow">
         {/* Header Section */}
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-zinc-900">Profile</h1>
-          <p className="text-sm text-zinc-500 mt-1">
+          <h1 className="crm-page-title">Profile</h1>
+          <p className="crm-page-subtitle">
             Manage your personal profile details, attributes, and security.
           </p>
         </div>
@@ -168,7 +168,7 @@ export default function ProfilePage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Left Column: Quick summary cards */}
           <div className="space-y-6 lg:col-span-1">
-            <div className="bg-white rounded-xl border border-zinc-200/80 p-6 text-center space-y-4 shadow-[0_1px_3px_rgba(0,0,0,0.01)]">
+            <div className="crm-card p-6 text-center space-y-4 shadow-[0_1px_3px_rgba(0,0,0,0.01)]">
               {user.avatar ? (
                 <img
                   src={user.avatar}
@@ -192,7 +192,7 @@ export default function ProfilePage() {
               </span>
             </div>
 
-            <div className="bg-white rounded-xl border border-zinc-200/80 p-6 space-y-4 shadow-[0_1px_3px_rgba(0,0,0,0.01)]">
+            <div className="crm-card p-6 space-y-4 shadow-[0_1px_3px_rgba(0,0,0,0.01)]">
               <h4 className="text-xs font-bold uppercase tracking-wider text-zinc-400">Account metadata</h4>
               <div className="space-y-3.5">
                 <div className="flex items-center gap-2.5 text-xs text-zinc-600">
@@ -219,7 +219,7 @@ export default function ProfilePage() {
           {/* Right Column: Forms panel */}
           <div className="lg:col-span-2 space-y-6">
             {/* Form: Profile details */}
-            <div className="bg-white rounded-xl border border-zinc-200/80 p-6 shadow-[0_1px_3px_rgba(0,0,0,0.01)]">
+            <div className="crm-card p-6 shadow-[0_1px_3px_rgba(0,0,0,0.01)]">
               <h3 className="text-sm font-bold text-zinc-900 mb-5 pb-3 border-b border-zinc-100">Profile Details</h3>
 
               <form onSubmit={handleProfileSubmit} className="space-y-4">
@@ -339,7 +339,7 @@ export default function ProfilePage() {
             </div>
 
             {/* Form: Password changes */}
-            <div className="bg-white rounded-xl border border-zinc-200/80 p-6 shadow-[0_1px_3px_rgba(0,0,0,0.01)]">
+            <div className="crm-card p-6 shadow-[0_1px_3px_rgba(0,0,0,0.01)]">
               <h3 className="text-sm font-bold text-zinc-900 mb-5 pb-3 border-b border-zinc-100">Update Password</h3>
 
               <form onSubmit={handlePasswordSubmit} className="space-y-4">
