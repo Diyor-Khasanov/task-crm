@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   AlertCircle,
   CheckCircle2,
@@ -64,7 +64,7 @@ export default function DashboardPage() {
   const [dataLoading, setDataLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchDashboardData = async () => {
+  const fetchDashboardData = useCallback(async () => {
     setDataLoading(true);
     setError(null);
 
@@ -85,7 +85,7 @@ export default function DashboardPage() {
     } finally {
       setDataLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     if (user) {
@@ -94,7 +94,7 @@ export default function DashboardPage() {
       }, 0);
       return () => clearTimeout(timer);
     }
-  }, [user]);
+  }, [fetchDashboardData, user]);
 
   const stats = dashboardData?.stats;
   const recentEmployees = dashboardData?.recentEmployees || [];

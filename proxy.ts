@@ -6,21 +6,25 @@ export function proxy(request: NextRequest) {
 
   // Retrieve auth cookies
   const hasSession = [
-    "next-auth.session-token",
-    "__Secure-next-auth.session-token",
+    "crm_session",
     "session",
     "session_token",
     "auth-token",
+    "auth_token",
+    "access_token",
+    "refresh_token",
     "token",
-    "corpcrm-session"
-  ].some(cookieName => {
+    "corpcrm-session",
+    "next-auth.session-token",
+    "__Secure-next-auth.session-token",
+  ].some((cookieName) => {
     const cookie = request.cookies.get(cookieName);
     return cookie && cookie.value;
   });
 
   // Protected paths
   const isProtectedPath = ["/dashboard", "/employees", "/tasks", "/profile"].some(
-    path => pathname === path || pathname.startsWith(path + "/")
+    (path) => pathname === path || pathname.startsWith(`${path}/`),
   );
 
   // Auth paths (only accessible when not logged in)
