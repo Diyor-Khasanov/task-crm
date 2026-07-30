@@ -151,7 +151,15 @@ export default function ProfilePage() {
     }
   };
 
-  if (!user) return null;
+  if (!user) {
+    return (
+      <SidebarLayout>
+        <div className="crm-page-narrow">
+          <div className="crm-card p-6 text-sm text-zinc-500">Loading profile…</div>
+        </div>
+      </SidebarLayout>
+    );
+  }
 
   return (
     <SidebarLayout>
