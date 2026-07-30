@@ -388,12 +388,12 @@ export default function EmployeesPage() {
 
   return (
     <SidebarLayout>
-      <div className="p-6 md:p-8 space-y-6 max-w-7xl mx-auto">
+      <div className="crm-page">
         {/* Header Section */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight text-zinc-900">Employees</h1>
-            <p className="text-sm text-zinc-500 mt-1">
+            <h1 className="crm-page-title">Employees</h1>
+            <p className="crm-page-subtitle">
               Manage your team members, their roles and access.
             </p>
           </div>
@@ -412,7 +412,7 @@ export default function EmployeesPage() {
         </div>
 
         {/* Main Content Card Container */}
-        <div className="bg-white rounded-xl border border-zinc-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.01)] overflow-hidden">
+        <div className="crm-card shadow-[0_1px_3px_rgba(0,0,0,0.01)] overflow-hidden">
           {/* Filters Bar */}
           <div className="p-5 border-b border-zinc-100 flex flex-col sm:flex-row gap-3 items-center justify-between">
             {/* Search */}
