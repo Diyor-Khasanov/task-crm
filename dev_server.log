@@ -5,8 +5,9 @@
 ▲ Next.js 16.2.12 (Turbopack)
 - Local:         http://localhost:3000
 - Network:       http://192.168.0.2:3000
-✓ Ready in 608ms
+✓ Ready in 549ms
 
-○ Compiling /login ...
- GET /login 200 in 5.3s (next.js: 4.9s, application-code: 409ms)
- GET /dashboard 200 in 777ms (next.js: 717ms, application-code: 59ms)
+ HEAD / 200 in 3.3s (next.js: 3.0s, application-code: 222ms)
+ GET /login 200 in 885ms (next.js: 760ms, application-code: 125ms)
+ GET /dashboard 200 in 848ms (next.js: 802ms, application-code: 46ms)
+ GET /employees 200 in 878ms (next.js: 829ms, application-code: 48ms)
