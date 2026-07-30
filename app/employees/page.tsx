@@ -5,7 +5,6 @@ import SidebarLayout from "../components/SidebarLayout";
 import {
   Plus,
   Search,
-  ChevronDown,
   MoreVertical,
   RefreshCw,
   X,
@@ -439,13 +438,12 @@ export default function EmployeesPage() {
                       setCurrentPage(1);
                     });
                   }}
-                  className="w-full sm:w-auto appearance-none inline-flex items-center justify-between gap-2 rounded-lg border border-zinc-200 bg-white pl-3 pr-8 py-2 text-xs font-semibold text-zinc-700 hover:bg-zinc-50 transition min-w-[120px] focus:outline-none focus:border-zinc-950"
+                  className="crm-filter-select w-full min-w-[120px] sm:w-auto"
                 >
                   <option value="ALL">All roles</option>
                   <option value="ADMIN">Admin</option>
                   <option value="EMPLOYEE">Employee</option>
                 </select>
-                <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400 pointer-events-none" />
               </div>
 
               <div className="relative flex-1 sm:flex-initial">
@@ -458,14 +456,13 @@ export default function EmployeesPage() {
                       setCurrentPage(1);
                     });
                   }}
-                  className="w-full sm:w-auto appearance-none inline-flex items-center justify-between gap-2 rounded-lg border border-zinc-200 bg-white pl-3 pr-8 py-2 text-xs font-semibold text-zinc-700 hover:bg-zinc-50 transition min-w-[120px] focus:outline-none focus:border-zinc-950"
+                  className="crm-filter-select w-full min-w-[120px] sm:w-auto"
                 >
                   <option value="ALL">All statuses</option>
                   <option value="ACTIVE">Active</option>
                   <option value="INACTIVE">Inactive</option>
                   <option value="ON_LEAVE">On Leave</option>
                 </select>
-                <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400 pointer-events-none" />
               </div>
             </div>
           </div>
