@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { ArrowRight, Eye, EyeOff, Lock, Mail } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 
@@ -10,8 +11,15 @@ const demoProfiles = {
 };
 
 export default function LoginPage() {
-  const { login } = useAuth();
+  const { login, user, loading: authLoading } = useAuth();
+  const router = useRouter();
   const [email, setEmail] = useState("");
+
+  useEffect(() => {
+    if (!authLoading && user) {
+      router.replace("/dashboard");
+    }
+  }, [user, authLoading, router]);
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -60,6 +68,21 @@ export default function LoginPage() {
       setLoading(false);
     }
   };
+
+  if (authLoading) {
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-[#fafafa] text-zinc-500">
+        <div className="flex flex-col items-center gap-4">
+          <div className="h-6 w-6 animate-spin rounded-full border border-zinc-200 border-t-zinc-900" />
+          <p className="text-[10px] uppercase tracking-[0.24em] font-medium text-zinc-400">Verifying session</p>
+        </div>
+      </main>
+    );
+  }
+
+  if (user) {
+    return null;
+  }
 
   return (
     <main className="relative flex min-h-screen flex-col items-center justify-center bg-[#fafafa] px-4 py-16 text-zinc-900 antialiased">

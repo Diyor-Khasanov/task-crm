@@ -143,8 +143,19 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
       {/* Main Panel */}
       <div className="flex-1 min-w-0 flex flex-col">
         {/* Top Header - Desktop only */}
-        <header className="hidden md:flex h-[65px] bg-white border-b border-zinc-200/80 px-8 items-center justify-end sticky top-0 z-30">
+        <header className="hidden md:flex h-[65px] bg-white border-b border-zinc-200/80 px-8 items-center justify-between sticky top-0 z-30">
+          <div className="text-[11px] font-bold uppercase tracking-wider text-zinc-400">
+            Workspace: <span className="text-zinc-950 font-extrabold">{user.firstName} {user.lastName}</span> · <span className="text-zinc-500 font-semibold">{user.role}</span>
+          </div>
           <div className="flex items-center gap-4">
+            <button
+              onClick={logout}
+              className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold text-zinc-500 hover:bg-red-50 hover:text-red-700 transition-all"
+            >
+              <LogOut className="h-3.5 w-3.5 text-zinc-400 hover:text-red-500 shrink-0" />
+              <span>Logout</span>
+            </button>
+            <div className="h-4 w-px bg-zinc-200" />
             {user.avatar ? (
               <img
                 src={user.avatar}
