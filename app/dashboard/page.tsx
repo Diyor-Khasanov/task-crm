@@ -148,23 +148,23 @@ export default function DashboardPage() {
   const recentEmployees = dashboardData?.recentEmployees || [];
   const recentTasks = dashboardData?.recentTasks || [];
 
-  // Custom styling helper for status pills (Geist light design system)
+  // Custom styling helper for status pills (Geist/Linear light design system)
   const getStatusStyle = (statusStr: string) => {
     const s = statusStr.toUpperCase();
     if (s === "ACTIVE" || s === "DONE") {
-      return "bg-emerald-50 text-emerald-700 border-emerald-200";
+      return "bg-emerald-50 text-emerald-700 border-emerald-100 font-semibold";
     }
     if (s === "ON_LEAVE" || s === "IN_PROGRESS") {
-      return "bg-amber-50 text-amber-700 border-amber-200";
+      return "bg-amber-50 text-amber-700 border-amber-100 font-semibold";
     }
-    return "bg-zinc-100 text-zinc-600 border-zinc-200";
+    return "bg-zinc-50 text-zinc-600 border-zinc-200/60 font-semibold";
   };
 
   const getPriorityStyle = (priorityStr: string) => {
     const p = priorityStr.toUpperCase();
-    if (p === "HIGH") return "text-red-700 bg-red-50 border-red-200";
-    if (p === "MEDIUM") return "text-amber-700 bg-amber-50 border-amber-200";
-    return "text-zinc-600 bg-zinc-50 border-zinc-200";
+    if (p === "HIGH") return "text-red-700 bg-red-50/60 border-red-100 font-semibold";
+    if (p === "MEDIUM") return "text-amber-700 bg-amber-50/60 border-amber-100 font-semibold";
+    return "text-zinc-600 bg-zinc-50/60 border-zinc-200/60 font-semibold";
   };
 
   return (
@@ -271,15 +271,27 @@ export default function DashboardPage() {
         {/* Top Header */}
         <header className="bg-white border-b border-zinc-200 py-5 px-6 md:px-8 flex items-center justify-between sticky top-0 z-30">
           <div>
-            <h1 className="text-lg font-bold text-zinc-900 tracking-tight capitalize">
-              {activeTab === "dashboard" ? "Dashboard" : activeTab}
-            </h1>
-            <p className="text-xs text-zinc-400 mt-1 font-medium">
-              {activeTab === "dashboard" && "Overview of company metrics and real-time activities."}
-              {activeTab === "employees" && "Manage internal directory, roles and real-time statuses."}
-              {activeTab === "tasks" && "Monitor active tickets, timelines and assignments."}
-              {activeTab === "profile" && "View your personal account settings and parameters."}
-            </p>
+            {activeTab === "dashboard" ? (
+              <div>
+                <h1 className="text-lg font-bold text-zinc-900 tracking-tight">
+                  Welcome back, {user.firstName}!
+                </h1>
+                <p className="text-xs text-zinc-400 mt-1 font-medium">
+                  Here is an overview of company metrics and real-time activities.
+                </p>
+              </div>
+            ) : (
+              <div>
+                <h1 className="text-lg font-bold text-zinc-900 tracking-tight capitalize">
+                  {activeTab}
+                </h1>
+                <p className="text-xs text-zinc-400 mt-1 font-medium">
+                  {activeTab === "employees" && "Manage internal directory, roles and real-time statuses."}
+                  {activeTab === "tasks" && "Monitor active tickets, timelines and assignments."}
+                  {activeTab === "profile" && "View your personal account settings and parameters."}
+                </p>
+              </div>
+            )}
           </div>
 
           <button
@@ -305,7 +317,7 @@ export default function DashboardPage() {
           {activeTab === "dashboard" && (
             <div className="space-y-8">
 
-              {/* Stats Cards Row */}
+              {/* Stats Cards Row (Total employees, Active tasks, Completed tasks, Pending tasks) */}
               <div className="grid gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
 
                 {/* Total Employees */}
@@ -399,14 +411,14 @@ export default function DashboardPage() {
                   </div>
 
                   {/* SVG Custom/Flexible Chart Component */}
-                  <div className="flex-1 min-h-[220px] flex items-end justify-between gap-2 border-b border-zinc-100 pb-2 relative">
+                  <div className="flex-1 min-h-[220px] flex items-end justify-between gap-2 border-b border-zinc-100 pb-2 relative mt-4">
 
                     {/* Background Grid Lines */}
                     <div className="absolute inset-0 flex flex-col justify-between pointer-events-none text-[9px] text-zinc-300">
-                      <div className="border-t border-dashed border-zinc-100 w-full pt-1"></div>
-                      <div className="border-t border-dashed border-zinc-100 w-full pt-1"></div>
-                      <div className="border-t border-dashed border-zinc-100 w-full pt-1"></div>
-                      <div className="border-t border-dashed border-zinc-100 w-full pt-1"></div>
+                      <div className="border-t border-dashed border-zinc-200/60 w-full pt-1"></div>
+                      <div className="border-t border-dashed border-zinc-200/60 w-full pt-1"></div>
+                      <div className="border-t border-dashed border-zinc-200/60 w-full pt-1"></div>
+                      <div className="border-t border-dashed border-zinc-200/60 w-full pt-1"></div>
                       <div className="w-full"></div>
                     </div>
 
@@ -418,26 +430,39 @@ export default function DashboardPage() {
 
                       return (
                         <div key={idx} className="flex-1 flex flex-col items-center group relative z-10">
-                          {/* Floating Values on Hover */}
-                          <div className="absolute -top-12 bg-black text-white rounded px-2.5 py-1.5 text-[9px] leading-tight flex flex-col gap-0.5 shadow-md opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none duration-150">
-                            <div>Created: <b>{day.created}</b></div>
-                            <div>Completed: <b>{day.completed}</b></div>
+                          {/* Floating Values on Hover with advanced styling */}
+                          <div className="absolute -top-14 bg-zinc-950 text-white rounded-lg px-3 py-2 text-[10px] leading-tight flex flex-col gap-1 shadow-xl opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-50 border border-zinc-800 min-w-[100px]">
+                            <p className="font-bold border-b border-zinc-800 pb-1 mb-0.5 text-zinc-400">{day.date || day.label}</p>
+                            <div className="flex items-center justify-between gap-3">
+                              <span className="flex items-center gap-1">
+                                <span className="h-1.5 w-1.5 rounded-full bg-zinc-400" />
+                                <span>Created:</span>
+                              </span>
+                              <b className="text-white">{day.created}</b>
+                            </div>
+                            <div className="flex items-center justify-between gap-3">
+                              <span className="flex items-center gap-1">
+                                <span className="h-1.5 w-1.5 rounded-full bg-white" />
+                                <span>Completed:</span>
+                              </span>
+                              <b className="text-white">{day.completed}</b>
+                            </div>
                           </div>
 
-                          <div className="w-full max-w-[24px] h-32 flex items-end justify-center gap-1">
+                          <div className="w-full max-w-[32px] h-36 flex items-end justify-center gap-1.5 px-0.5">
                             {/* Created Bar */}
                             <div
                               style={{ height: `${createdHeight}%` }}
-                              className="w-1/2 bg-zinc-200 rounded-t-xs transition-all duration-300"
+                              className="w-1/2 bg-zinc-200 rounded-t-sm transition-all duration-500 ease-out group-hover:bg-zinc-300 shadow-[inset_0_-10px_10px_rgba(0,0,0,0.02)]"
                             />
                             {/* Completed Bar */}
                             <div
                               style={{ height: `${completedHeight}%` }}
-                              className="w-1/2 bg-black rounded-t-xs transition-all duration-300"
+                              className="w-1/2 bg-zinc-950 rounded-t-sm transition-all duration-500 ease-out group-hover:bg-zinc-800 shadow-[0_2px_4px_rgba(0,0,0,0.1)]"
                             />
                           </div>
 
-                          <span className="text-[10px] font-semibold text-zinc-400 mt-2">
+                          <span className="text-[10px] font-semibold text-zinc-500 mt-2 tracking-tight group-hover:text-zinc-950 transition-colors">
                             {day.label}
                           </span>
                         </div>
@@ -473,15 +498,15 @@ export default function DashboardPage() {
                               {employee.avatar ? (
                                 <img src={employee.avatar} alt={employee.firstName} className="h-8 w-8 rounded-full object-cover border border-zinc-200" />
                               ) : (
-                                <div className="h-8 w-8 rounded-full bg-zinc-100 border border-zinc-200 flex items-center justify-center font-semibold text-zinc-600 text-xs">
+                                <div className="h-8 w-8 rounded-full bg-zinc-50 border border-zinc-200 flex items-center justify-center font-semibold text-zinc-600 text-xs shadow-xs">
                                   {employee.firstName[0]}{employee.lastName[0]}
                                 </div>
                               )}
                               <div className="min-w-0">
-                                <h4 className="text-xs font-bold text-zinc-900 truncate">
+                                <h4 className="text-xs font-semibold text-zinc-900 truncate">
                                   {employee.firstName} {employee.lastName}
                                 </h4>
-                                <p className="text-[10px] text-zinc-400 truncate mt-0.5">{employee.position}</p>
+                                <p className="text-[10px] text-zinc-400 truncate mt-0.5 font-medium">{employee.position}</p>
                               </div>
                             </div>
 
@@ -552,8 +577,18 @@ export default function DashboardPage() {
                                 <span className="text-[10px] font-semibold text-zinc-400">Unassigned</span>
                               )}
                             </td>
-                            <td className="py-3.5 px-4 text-zinc-400 font-medium">
-                              {new Date(task.dueDate).toLocaleDateString()}
+                            <td className="py-3.5 px-4">
+                              {(() => {
+                                const today = new Date();
+                                today.setHours(0, 0, 0, 0);
+                                const deadlineDate = new Date(task.dueDate);
+                                const isOverdue = today > deadlineDate && task.status !== "DONE";
+                                return (
+                                  <span className={`font-mono text-[11px] font-semibold ${isOverdue ? "text-red-600 bg-red-50 px-1.5 py-0.5 rounded border border-red-200" : "text-zinc-500"}`}>
+                                    {deadlineDate.toLocaleDateString()}
+                                  </span>
+                                );
+                              })()}
                             </td>
                             <td className="py-3.5 px-4">
                               <span className={`px-2 py-0.5 text-[9px] font-semibold tracking-wide uppercase rounded border ${getPriorityStyle(task.priority)}`}>
@@ -700,8 +735,18 @@ export default function DashboardPage() {
                               <span className="text-[10px] font-semibold text-zinc-400">Unassigned</span>
                             )}
                           </td>
-                          <td className="py-3.5 px-4 text-zinc-400 font-medium">
-                            {new Date(task.dueDate).toLocaleDateString()}
+                          <td className="py-3.5 px-4">
+                            {(() => {
+                              const today = new Date();
+                              today.setHours(0, 0, 0, 0);
+                              const deadlineDate = new Date(task.dueDate);
+                              const isOverdue = today > deadlineDate && task.status !== "DONE";
+                              return (
+                                <span className={`font-mono text-[11px] font-semibold ${isOverdue ? "text-red-600 bg-red-50 px-1.5 py-0.5 rounded border border-red-200" : "text-zinc-500"}`}>
+                                  {deadlineDate.toLocaleDateString()}
+                                </span>
+                              );
+                            })()}
                           </td>
                           <td className="py-3.5 px-4">
                             <span className={`px-2 py-0.5 text-[9px] font-semibold tracking-wide uppercase rounded border ${getPriorityStyle(task.priority)}`}>
