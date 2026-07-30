@@ -14,7 +14,7 @@ import {
 } from "../lib/mockCrm";
 
 const API_BASE_URL = process.env.CRM_API_BASE_URL || "https://for-interns.vercel.app/api";
-const USE_MOCK_API = process.env.CRM_USE_MOCK_API !== "false";
+const USE_MOCK_API = process.env.CRM_USE_MOCK_API === "true";
 
 function rewriteSetCookie(cookie: string) {
   const withoutRemoteDomain = cookie.replace(/;\s*Domain=[^;]*/gi, "");
@@ -195,8 +195,17 @@ export async function proxyApiRequest(request: NextRequest, path: string) {
       redirect: "manual",
     });
   } catch (err) {
-    console.warn("Remote CRM API unavailable; using bundled demo data instead.", err);
-    return mockApiRequest(request, path);
+    console.error("Remote CRM API request failed.", err);
+    return NextResponse.json(
+      {
+        success: false,
+        error: {
+          code: "SERVICE_UNAVAILABLE",
+          message: "Could not reach the remote CRM API.",
+        },
+      },
+      { status: 503 },
+    );
   }
 
   const body = await remoteResponse.arrayBuffer();

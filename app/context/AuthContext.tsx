@@ -3,6 +3,16 @@
 import React, { createContext, useCallback, useContext, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
+const roleCookieName = "crm_user_role";
+
+function rememberUserRole(userData: User) {
+  document.cookie = `${roleCookieName}=${userData.role}; path=/; SameSite=Lax`;
+}
+
+function clearUserRole() {
+  document.cookie = `${roleCookieName}=; path=/; max-age=0; SameSite=Lax`;
+}
+
 export interface User {
   id: string;
   email: string;
@@ -37,14 +47,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const json = await response.json();
         if (json.success && json.data) {
           setUser(json.data);
+          rememberUserRole(json.data);
           return json.data;
         }
       }
       setUser(null);
+      clearUserRole();
       return null;
     } catch (error) {
       console.error("Error refreshing user profile:", error);
       setUser(null);
+      clearUserRole();
       return null;
     } finally {
       setLoading(false);
@@ -53,6 +66,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const login = (userData: User) => {
     setUser(userData);
+    rememberUserRole(userData);
     setLoading(false);
     router.push("/dashboard");
   };
@@ -66,6 +80,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       console.error("Error calling local logout endpoint:", error);
     } finally {
       setUser(null);
+      clearUserRole();
       setLoading(false);
       router.push("/login");
     }
