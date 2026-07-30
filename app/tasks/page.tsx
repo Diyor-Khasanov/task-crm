@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useTransition } from "react";
 import SidebarLayout from "../components/SidebarLayout";
-import { Search, ChevronDown, RefreshCw, Plus, Edit2, Trash2, X, AlertCircle } from "lucide-react";
+import { Search, RefreshCw, Plus, Edit2, Trash2, X, AlertCircle } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 
 interface Employee {
@@ -317,16 +317,14 @@ export default function TasksPage() {
             </div>
             <div className="flex w-full items-center gap-3 sm:w-auto">
               <div className="relative flex-1 sm:flex-initial">
-                <select value={statusFilter} onChange={(e) => startTransition(() => { setStatusFilter(e.target.value as StatusType); setCurrentPage(1); })} className="w-full appearance-none rounded-lg border border-zinc-200 bg-white py-2 pl-3 pr-8 text-xs font-semibold text-zinc-700 transition hover:bg-zinc-50 focus:border-zinc-950 focus:outline-none sm:w-auto">
+                <select value={statusFilter} onChange={(e) => startTransition(() => { setStatusFilter(e.target.value as StatusType); setCurrentPage(1); })} className="crm-filter-select w-full sm:w-auto">
                   <option value="ALL">All statuses</option><option value="TODO">To Do</option><option value="IN_PROGRESS">In Progress</option><option value="DONE">Completed</option>
                 </select>
-                <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400" />
               </div>
               <div className="relative flex-1 sm:flex-initial">
-                <select value={priorityFilter} onChange={(e) => startTransition(() => { setPriorityFilter(e.target.value as PriorityType); setCurrentPage(1); })} className="w-full appearance-none rounded-lg border border-zinc-200 bg-white py-2 pl-3 pr-8 text-xs font-semibold text-zinc-700 transition hover:bg-zinc-50 focus:border-zinc-950 focus:outline-none sm:w-auto">
+                <select value={priorityFilter} onChange={(e) => startTransition(() => { setPriorityFilter(e.target.value as PriorityType); setCurrentPage(1); })} className="crm-filter-select w-full sm:w-auto">
                   <option value="ALL">All priorities</option><option value="LOW">Low</option><option value="MEDIUM">Medium</option><option value="HIGH">High</option>
                 </select>
-                <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400" />
               </div>
             </div>
           </div>
