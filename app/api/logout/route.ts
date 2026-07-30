@@ -12,6 +12,8 @@ const knownSessionCookieNames = [
   "refresh_token",
   "next-auth.session-token",
   "__Secure-next-auth.session-token",
+  "__Secure-authjs.session-token",
+  "authjs.session-token",
 ];
 
 async function notifyRemoteLogout(request: NextRequest) {

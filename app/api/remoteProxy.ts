@@ -23,7 +23,10 @@ function rewriteSetCookie(cookie: string) {
     return withoutRemoteDomain;
   }
 
-  return withoutRemoteDomain.replace(/;\s*Secure/gi, "");
+  // In development, if the cookie name starts with __Secure-, we MUST keep the Secure attribute,
+  // otherwise modern browsers will reject it. Since localhost is considered a secure context,
+  // keeping the Secure attribute is safe and recommended for all cookies.
+  return withoutRemoteDomain;
 }
 
 function responseHeaders(remoteResponse: Response) {

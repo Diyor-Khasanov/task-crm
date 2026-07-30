@@ -18,6 +18,8 @@ export function proxy(request: NextRequest) {
     "corpcrm-session",
     "next-auth.session-token",
     "__Secure-next-auth.session-token",
+    "__Secure-authjs.session-token",
+    "authjs.session-token",
   ].some((cookieName) => {
     const cookie = request.cookies.get(cookieName);
     return cookie && cookie.value;
