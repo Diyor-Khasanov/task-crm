@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useCallback, useContext, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 export interface User {
@@ -30,7 +30,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
 
-  const refreshUser = async (): Promise<User | null> => {
+  const refreshUser = useCallback(async (): Promise<User | null> => {
     try {
       const response = await fetch("/api/profile");
       if (response.ok) {
@@ -49,7 +49,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   const login = (userData: User) => {
     setUser(userData);
@@ -73,9 +73,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // On mount, check if user is already authenticated
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    refreshUser();
-  }, []);
+    const timer = setTimeout(() => {
+      refreshUser();
+    }, 0);
+    return () => clearTimeout(timer);
+  }, [refreshUser]);
 
   return (
     <AuthContext.Provider value={{ user, loading, login, logout, refreshUser }}>

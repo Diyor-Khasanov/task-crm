@@ -28,10 +28,12 @@ export async function proxyApiRequest(request: NextRequest, path: string) {
   const contentType = request.headers.get("content-type");
   const accept = request.headers.get("accept");
   const cookie = request.headers.get("cookie");
+  const authorization = request.headers.get("authorization");
 
   if (contentType) headers.set("content-type", contentType);
   if (accept) headers.set("accept", accept);
   if (cookie) headers.set("cookie", cookie);
+  if (authorization) headers.set("authorization", authorization);
 
   const hasBody = !["GET", "HEAD"].includes(request.method);
   let remoteResponse: Response;
