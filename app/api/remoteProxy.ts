@@ -1,11 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const API_BASE_URL = "https://for-interns.vercel.app/api";
+const API_BASE_URL = process.env.CRM_API_BASE_URL || "https://for-interns.vercel.app/api";
 
 function rewriteSetCookie(cookie: string) {
-  return cookie
-    .replace(/;\s*Domain=[^;]*/gi, "")
-    .replace(/;\s*Secure/gi, "");
+  const withoutRemoteDomain = cookie.replace(/;\s*Domain=[^;]*/gi, "");
+
+  if (process.env.NODE_ENV === "production") {
+    return withoutRemoteDomain;
+  }
+
+  return withoutRemoteDomain.replace(/;\s*Secure/gi, "");
 }
 
 function responseHeaders(remoteResponse: Response) {
@@ -60,10 +64,13 @@ export async function proxyApiRequest(request: NextRequest, path: string) {
     headers: responseHeaders(remoteResponse),
   });
 
-  remoteResponse.headers.forEach((value, key) => {
-    if (key.toLowerCase() === "set-cookie") {
-      response.headers.append("set-cookie", rewriteSetCookie(value));
-    }
+  const cookieHeaders =
+    typeof remoteResponse.headers.getSetCookie === "function"
+      ? remoteResponse.headers.getSetCookie()
+      : remoteResponse.headers.get("set-cookie")?.split(/,(?=[^;,]+=)/g) || [];
+
+  cookieHeaders.forEach((cookie) => {
+    response.headers.append("set-cookie", rewriteSetCookie(cookie));
   });
 
   return response;
