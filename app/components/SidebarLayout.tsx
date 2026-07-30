@@ -45,7 +45,9 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
 
   const menuItems = [
     { name: "Dashboard", href: "/dashboard", icon: LayoutGrid, eyebrow: "Overview" },
-    { name: "Employees", href: "/employees", icon: Users, eyebrow: "Directory" },
+    ...(user.role === "ADMIN"
+      ? [{ name: "Employees", href: "/employees", icon: Users, eyebrow: "Directory" }]
+      : []),
     { name: "Tasks", href: "/tasks", icon: CheckCircle2, eyebrow: "Queue" },
     { name: "Profile", href: "/profile", icon: User, eyebrow: "Account" },
   ];

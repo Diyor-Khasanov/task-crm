@@ -3,6 +3,7 @@ import type { NextRequest } from "next/server";
 
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
+  const roleCookie = request.cookies.get("crm_user_role")?.value;
 
   // Retrieve auth cookies
   const hasSession = [
@@ -29,6 +30,12 @@ export function proxy(request: NextRequest) {
 
   // Auth paths (only accessible when not logged in)
   const isAuthPath = pathname === "/login";
+
+  if (pathname === "/employees" && roleCookie === "EMPLOYEE") {
+    const url = request.nextUrl.clone();
+    url.pathname = "/dashboard";
+    return NextResponse.redirect(url);
+  }
 
   if (isProtectedPath && !hasSession) {
     const url = request.nextUrl.clone();
