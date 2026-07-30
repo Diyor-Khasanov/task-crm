@@ -155,6 +155,7 @@ export default function EmployeesPage() {
       fetchEmployees();
     }, 0);
     return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage, roleFilter, statusFilter]);
 
   useEffect(() => {
@@ -163,6 +164,7 @@ export default function EmployeesPage() {
       fetchEmployees();
     }, 300);
     return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search]);
 
   // Handle clicking outside of the active row actions menu to close it
@@ -340,7 +342,7 @@ export default function EmployeesPage() {
       const month = months[d.getUTCMonth()];
       const year = d.getUTCFullYear();
       return `${day} ${month} ${year}`;
-    } catch (e) {
+    } catch {
       return "—";
     }
   };

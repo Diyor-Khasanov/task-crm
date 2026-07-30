@@ -104,6 +104,7 @@ export default function TasksPage() {
       fetchTasks();
     }, 0);
     return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage, statusFilter, priorityFilter]);
 
   useEffect(() => {
@@ -112,6 +113,7 @@ export default function TasksPage() {
       fetchTasks();
     }, 300);
     return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search]);
 
   const getStatusBadge = (statusStr: string) => {
