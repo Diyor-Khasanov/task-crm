@@ -11,7 +11,8 @@ export async function POST() {
     "session",
     "session_token",
     "auth-token",
-    "token"
+    "token",
+    "corpcrm-session"
   ];
 
   for (const cookieName of cookiesToClear) {
@@ -20,7 +21,7 @@ export async function POST() {
       maxAge: 0,
       expires: new Date(0),
       httpOnly: true,
-      secure: true,
+      secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
     });
   }

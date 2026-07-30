@@ -11,7 +11,8 @@ export function proxy(request: NextRequest) {
     "session",
     "session_token",
     "auth-token",
-    "token"
+    "token",
+    "corpcrm-session"
   ].some(cookieName => {
     const cookie = request.cookies.get(cookieName);
     return cookie && cookie.value;
