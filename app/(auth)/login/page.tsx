@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { ArrowRight, Check, Eye, EyeOff, Lock, Mail } from "lucide-react";
+import { ArrowRight, Eye, EyeOff, Lock, Mail } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 
 const demoProfiles = {
@@ -62,31 +62,28 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="relative flex min-h-screen items-center justify-center bg-black px-4 py-12 text-zinc-200">
-      {/* Vercel Grid & Ambient Background */}
-      <div className="absolute inset-0 grid-bg opacity-40" />
-      <div className="absolute top-1/4 left-1/2 h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 glowing-beam pointer-events-none" />
+    <main className="relative flex min-h-screen flex-col items-center justify-center bg-[#fafafa] px-4 py-16 text-zinc-900 antialiased">
+      <div className="w-full max-w-[400px]">
 
-      <div className="relative z-10 w-full max-w-[420px]">
-        {/* Vercel minimalist logo: solid triangle */}
+        {/* Geist minimalist logo: solid black triangle */}
         <div className="mb-8 flex flex-col items-center">
           <svg
-            className="h-8 w-8 text-white transition-transform hover:scale-105"
+            className="h-8 w-8 text-black transition-transform hover:scale-105"
             viewBox="0 0 75 65"
             fill="currentColor"
           >
             <polygon points="37.5,0 75,65 0,65" />
           </svg>
-          <h1 className="mt-4 text-xl font-medium tracking-tight text-white">
+          <h1 className="mt-4 text-xl font-semibold tracking-tight text-zinc-900">
             Sign in to CorpCRM
           </h1>
-          <p className="mt-1 text-xs text-zinc-500">
+          <p className="mt-1.5 text-center text-xs text-zinc-500">
             Enter your credentials or choose a quick demo account
           </p>
         </div>
 
         {/* Demo profiles selector tab bar */}
-        <div className="mb-6 grid grid-cols-2 gap-2 p-1 rounded-md border border-zinc-800 bg-zinc-950/60 backdrop-blur-md">
+        <div className="mb-6 grid grid-cols-2 gap-1.5 p-1 rounded-lg border border-zinc-200/80 bg-zinc-100/50">
           {(Object.keys(demoProfiles) as Array<keyof typeof demoProfiles>).map((key) => {
             const active = selectedProfile === key;
             return (
@@ -94,21 +91,21 @@ export default function LoginPage() {
                 key={key}
                 type="button"
                 onClick={() => chooseProfile(key)}
-                className={`relative flex flex-col items-start px-3 py-2.5 rounded-sm transition-all duration-150 ${
+                className={`relative flex flex-col items-start px-3.5 py-2 rounded-md border transition-all duration-150 text-left ${
                   active
-                    ? "bg-zinc-900 text-white"
-                    : "text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900/40"
+                    ? "bg-white border-zinc-200 text-zinc-900 shadow-xs"
+                    : "bg-transparent border-transparent text-zinc-500 hover:text-zinc-800 hover:bg-zinc-200/30"
                 }`}
               >
                 <div className="flex w-full items-center justify-between text-xs font-semibold tracking-tight">
                   <span>{demoProfiles[key].label}</span>
                   {active ? (
-                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)]" />
+                    <span className="h-1.5 w-1.5 rounded-full bg-zinc-900 shadow-sm" />
                   ) : (
                     <span className="h-1.5 w-1.5 rounded-full bg-transparent" />
                   )}
                 </div>
-                <span className="mt-0.5 text-[10px] text-zinc-500 font-normal">
+                <span className="mt-0.5 text-[10px] text-zinc-400 font-normal">
                   {demoProfiles[key].meta}
                 </span>
               </button>
@@ -117,9 +114,9 @@ export default function LoginPage() {
         </div>
 
         {/* Login form container */}
-        <div className="rounded-lg border border-zinc-800 bg-zinc-950/80 p-6 shadow-2xl backdrop-blur-xl">
+        <div className="rounded-xl border border-zinc-200/80 bg-white p-8 shadow-[0_8px_30px_rgba(0,0,0,0.03)]">
           {generalError && (
-            <div className="mb-4 rounded-md border border-red-900/50 bg-red-950/30 px-3.5 py-2.5 text-xs text-red-400">
+            <div className="mb-5 rounded-lg border border-red-100 bg-red-50/60 px-4 py-3 text-xs font-medium text-red-600">
               {generalError}
             </div>
           )}
@@ -128,12 +125,12 @@ export default function LoginPage() {
             <div>
               <label
                 htmlFor="email"
-                className="mb-1.5 block text-xs font-medium text-zinc-400"
+                className="mb-1.5 block text-xs font-medium text-zinc-600"
               >
                 Email Address
               </label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-zinc-500" />
+                <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400" />
                 <input
                   id="email"
                   type="email"
@@ -144,13 +141,13 @@ export default function LoginPage() {
                     setEmail(e.target.value);
                     setSelectedProfile(null);
                   }}
-                  className={`w-full rounded-md border bg-zinc-950 py-2 pl-9 pr-3 text-sm text-white placeholder-zinc-600 outline-none transition duration-150 focus:border-zinc-200 focus:ring-1 focus:ring-zinc-200 ${
-                    fieldErrors.email?.length ? "border-red-500" : "border-zinc-800"
+                  className={`w-full rounded-md border bg-white py-2 pl-9 pr-3 text-sm text-zinc-900 placeholder-zinc-400 outline-none transition duration-150 focus:border-black focus:ring-1 focus:ring-black ${
+                    fieldErrors.email?.length ? "border-red-400 focus:border-red-400 focus:ring-red-400" : "border-zinc-200"
                   }`}
                 />
               </div>
               {fieldErrors.email?.map((err) => (
-                <span key={err} className="mt-1 block text-[11px] text-red-400">
+                <span key={err} className="mt-1 block text-[11px] text-red-500 font-medium">
                   {err}
                 </span>
               ))}
@@ -159,12 +156,12 @@ export default function LoginPage() {
             <div>
               <label
                 htmlFor="password"
-                className="mb-1.5 block text-xs font-medium text-zinc-400"
+                className="mb-1.5 block text-xs font-medium text-zinc-600"
               >
                 Password
               </label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-zinc-500" />
+                <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400" />
                 <input
                   id="password"
                   type={showPassword ? "text" : "password"}
@@ -175,25 +172,25 @@ export default function LoginPage() {
                     setPassword(e.target.value);
                     setSelectedProfile(null);
                   }}
-                  className={`w-full rounded-md border bg-zinc-950 py-2 pl-9 pr-10 text-sm text-white placeholder-zinc-600 outline-none transition duration-150 focus:border-zinc-200 focus:ring-1 focus:ring-zinc-200 ${
-                    fieldErrors.password?.length ? "border-red-500" : "border-zinc-800"
+                  className={`w-full rounded-md border bg-white py-2 pl-9 pr-10 text-sm text-zinc-900 placeholder-zinc-400 outline-none transition duration-150 focus:border-black focus:ring-1 focus:ring-black ${
+                    fieldErrors.password?.length ? "border-red-400 focus:border-red-400 focus:ring-red-400" : "border-zinc-200"
                   }`}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600 transition"
                   aria-label={showPassword ? "Hide password" : "Show password"}
                 >
                   {showPassword ? (
-                    <EyeOff className="h-3.5 w-3.5" />
+                    <EyeOff className="h-4 w-4" />
                   ) : (
-                    <Eye className="h-3.5 w-3.5" />
+                    <Eye className="h-4 w-4" />
                   )}
                 </button>
               </div>
               {fieldErrors.password?.map((err) => (
-                <span key={err} className="mt-1 block text-[11px] text-red-400">
+                <span key={err} className="mt-1 block text-[11px] text-red-500 font-medium">
                   {err}
                 </span>
               ))}
@@ -202,16 +199,16 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="relative flex w-full items-center justify-center gap-1.5 rounded-md bg-white py-2 px-4 text-xs font-semibold text-black transition duration-150 hover:bg-zinc-200 disabled:cursor-not-allowed disabled:opacity-50"
+              className="mt-2 relative flex w-full items-center justify-center gap-1.5 rounded-md bg-black py-2 px-4 text-xs font-medium text-white transition duration-150 hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {loading ? "Signing in..." : "Continue"}
-              {!loading && <ArrowRight className="h-3.5 w-3.5" />}
+              {!loading && <ArrowRight className="h-4 w-4" />}
             </button>
           </form>
         </div>
 
         {/* Minimalist footer info */}
-        <p className="mt-8 text-center text-[10px] text-zinc-600">
+        <p className="mt-8 text-center text-[10px] text-zinc-400 font-medium">
           Secure, HTTPOnly encrypted session authorization · CorpCRM 2026
         </p>
       </div>

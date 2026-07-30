@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #000000;
-  --foreground: #fafafa;
+  --background: #ffffff;
+  --foreground: #111111;
 }
 
 * {
@@ -11,12 +11,12 @@
 
 html {
   background: var(--background);
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 body {
   margin: 0;
-  background: #000000;
+  background: var(--background);
   color: var(--foreground);
 }
 
@@ -33,29 +33,18 @@ button:disabled {
   cursor: not-allowed;
 }
 
-/* Elegant Vercel-style dot grid background */
-.grid-bg {
-  background-image: radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px);
-  background-size: 24px 24px;
-}
-
-/* Subtle glow / beam elements */
-.glowing-beam {
-  background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.03), transparent 70%);
-}
-
-/* Perfect scrollbar for dark mode */
+/* Elegant scrollbar for light mode */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #000000;
+  background: #ffffff;
 }
 ::-webkit-scrollbar-thumb {
-  background: #27272a;
+  background: #e4e4e7;
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #3f3f46;
+  background: #d4d4d8;
 }
